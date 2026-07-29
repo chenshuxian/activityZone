@@ -1,0 +1,34 @@
+export type EventStatus = 'draft' | 'pending' | 'published' | 'rejected' | 'ended'
+export type EventSource = 'user' | 'crawler'
+
+export interface Category { id: string; name: string; slug: string; icon: string | null }
+
+export interface EventSummary {
+  id: string
+  title: string
+  coverImage: string | null
+  city: string
+  district: string
+  startAt: string
+  isFree: boolean
+  capacity: number | null
+  categories: Category[]
+}
+
+export interface EventDetail extends EventSummary {
+  description: string | null
+  organizerName: string | null
+  contactInfo: string | null
+  feeNote: string | null
+  address: string | null
+  endAt: string
+  registrationDeadline: string | null
+  status: EventStatus
+}
+
+export interface EventFilters {
+  city?: string
+  district?: string
+  categorySlugs?: string[]
+  keyword?: string
+}
