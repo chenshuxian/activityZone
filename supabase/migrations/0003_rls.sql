@@ -36,9 +36,16 @@ create policy events_read on public.events
     or public.is_admin()
   );
 create policy events_insert on public.events
-  for insert with check (organizer_id = auth.uid());
+  for insert with check (
+    organizer_id = auth.uid()
+    and (public.is_admin() or status in ('draft','pending'))
+  );
 create policy events_update on public.events
-  for update using (organizer_id = auth.uid() or public.is_admin());
+  for update using (organizer_id = auth.uid() or public.is_admin())
+  with check (
+    public.is_admin()
+    or (organizer_id = auth.uid() and status in ('draft','pending'))
+  );
 
 -- event_categories：跟隨可見的 event
 create policy event_categories_read on public.event_categories
