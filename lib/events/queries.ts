@@ -1,27 +1,22 @@
 import { createClient } from '@/lib/supabase/server'
-import type { Category, EventSummary, EventDetail, EventFilters } from '@/lib/types'
+import type { EventSummary, EventDetail, EventFilters } from '@/lib/types'
+import type { Database } from '@/lib/database.types'
 
-interface EventRow {
-  id: string
-  title: string
-  cover_image?: string | null
-  city: string
-  district: string
-  start_at: string
-  is_free: boolean
-  capacity?: number | null
-  event_categories?: { categories: Category }[] | null
-  description?: string | null
-  organizer_name?: string | null
-  contact_info?: string | null
-  fee_note?: string | null
-  address?: string | null
-  end_at: string
-  registration_deadline?: string | null
-  status?: EventDetail['status']
+type EventRow = Database['public']['Tables']['events']['Row']
+type CategoryRow = Database['public']['Tables']['categories']['Row']
+
+// Shape of a row returned by the SELECT below: the summary columns plus the
+// nested event_categories -> categories join. supabase-js parses the SELECT
+// string literal at compile time, so query results already infer this shape;
+// this alias just gives `mapEventRow`'s parameter a name to document it.
+type EventWithCategories = Pick<
+  EventRow,
+  'id' | 'title' | 'cover_image' | 'city' | 'district' | 'start_at' | 'is_free' | 'capacity'
+> & {
+  event_categories: { categories: Pick<CategoryRow, 'id' | 'name' | 'slug' | 'icon'> }[]
 }
 
-export function mapEventRow(row: EventRow): EventSummary {
+export function mapEventRow(row: EventWithCategories): EventSummary {
   return {
     id: row.id,
     title: row.title,
@@ -51,7 +46,7 @@ export async function listPublishedEvents(filters: EventFilters = {}): Promise<E
   if (filters.keyword) q = q.ilike('title', `%${filters.keyword}%`)
   const { data, error } = await q
   if (error) throw error
-  let events = ((data ?? []) as unknown as EventRow[]).map(mapEventRow)
+  let events = (data ?? []).map(mapEventRow)
   if (filters.categorySlugs?.length) {
     events = events.filter(e =>
       e.categories.some(c => filters.categorySlugs!.includes(c.slug)))
@@ -67,16 +62,18 @@ export async function getEventById(id: string): Promise<EventDetail | null> {
     .eq('id', id).maybeSingle()
   if (error) throw error
   if (!data) return null
-  const row = data as unknown as EventRow
   return {
-    ...mapEventRow(row),
-    description: row.description ?? null,
-    organizerName: row.organizer_name ?? null,
-    contactInfo: row.contact_info ?? null,
-    feeNote: row.fee_note ?? null,
-    address: row.address ?? null,
-    endAt: row.end_at,
-    registrationDeadline: row.registration_deadline ?? null,
-    status: row.status as EventDetail['status'],
+    ...mapEventRow(data),
+    description: data.description ?? null,
+    organizerName: data.organizer_name ?? null,
+    contactInfo: data.contact_info ?? null,
+    feeNote: data.fee_note ?? null,
+    address: data.address ?? null,
+    endAt: data.end_at,
+    registrationDeadline: data.registration_deadline ?? null,
+    // `status` is a `text` column with a CHECK constraint in Postgres, not a
+    // native enum, so the generated type is the widened `string` here. The
+    // CHECK constraint guarantees the runtime value is one of EventStatus.
+    status: data.status as EventDetail['status'],
   }
 }

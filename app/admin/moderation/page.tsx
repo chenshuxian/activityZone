@@ -3,26 +3,17 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 
-interface PendingEventRow {
-  id: string
-  title: string
-  city: string
-  district: string
-  start_at: string
-  organizer_name: string | null
-}
-
 export default async function ModerationPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/')
   const { data: me } = await supabase.from('profiles').select('role').eq('id', user.id).single()
-  if ((me as unknown as { role: string } | null)?.role !== 'admin') redirect('/')
+  if (me?.role !== 'admin') redirect('/')
 
   const { data: pending } = await supabase.from('events')
     .select('id, title, city, district, start_at, organizer_name')
     .eq('status', 'pending').order('created_at', { ascending: true })
-  const rows = (pending ?? []) as unknown as PendingEventRow[]
+  const rows = pending ?? []
 
   async function approve(formData: FormData) {
     'use server'

@@ -2,23 +2,9 @@
 import { createClient } from '@/lib/supabase/server'
 import { validateEventInput, nextStatusOnApprove, nextStatusOnReject, type EventInput } from '@/lib/events/mutations'
 import type { EventStatus } from '@/lib/types'
+import type { Database } from '@/lib/database.types'
 
-interface EventInsert {
-  organizer_id: string
-  title: string
-  description: string | null
-  city: string
-  district: string
-  address: string | null
-  start_at: string
-  end_at: string
-  is_free: boolean
-  fee_note: string | null
-  organizer_name: string | null
-  contact_info: string | null
-  capacity: number | null
-  status: 'pending'
-}
+type EventInsert = Database['public']['Tables']['events']['Insert']
 
 export async function createEvent(input: EventInput) {
   const errors = validateEventInput(input)
@@ -56,16 +42,21 @@ export async function createEvent(input: EventInput) {
 
 export async function approveEvent(id: string) {
   const supabase = await createClient()
-  const { data: cur } = await supabase.from('events').select('status').eq('id', id).single()
-  const next = nextStatusOnApprove((cur as unknown as { status: EventStatus }).status)
+  const { data: cur, error: curError } = await supabase.from('events').select('status').eq('id', id).single()
+  if (curError || !cur) return { ok: false, error: curError?.message ?? '活動不存在' }
+  // `status` is `text` + CHECK in Postgres, not a native enum, so the
+  // generated column type is the widened `string`; the CHECK constraint
+  // guarantees the runtime value is one of EventStatus.
+  const next = nextStatusOnApprove(cur.status as EventStatus)
   const { error } = await supabase.from('events').update({ status: next }).eq('id', id)
   return { ok: !error, error: error?.message }
 }
 
 export async function rejectEvent(id: string, reason: string) {
   const supabase = await createClient()
-  const { data: cur } = await supabase.from('events').select('status').eq('id', id).single()
-  const next = nextStatusOnReject((cur as unknown as { status: EventStatus }).status)
+  const { data: cur, error: curError } = await supabase.from('events').select('status').eq('id', id).single()
+  if (curError || !cur) return { ok: false, error: curError?.message ?? '活動不存在' }
+  const next = nextStatusOnReject(cur.status as EventStatus)
   const { error } = await supabase.from('events')
     .update({ status: next, reject_reason: reason }).eq('id', id)
   return { ok: !error, error: error?.message }
