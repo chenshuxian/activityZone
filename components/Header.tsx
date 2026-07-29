@@ -1,5 +1,6 @@
 'use client'
 import { createClient } from '@/lib/supabase/client'
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 export function Header() {
@@ -15,7 +16,7 @@ export function Header() {
   const logout = () => supabase.auth.signOut().then(() => location.reload())
   return (
     <header className="flex items-center gap-3 p-3 border-b">
-      <a href="/" className="font-bold">🎪 地方活動網</a>
+      <Link href="/" className="font-bold">🎪 地方活動網</Link>
       <div className="ml-auto">
         {email
           ? <button onClick={logout}>登出（{email}）</button>

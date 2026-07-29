@@ -1,7 +1,27 @@
 import { createClient } from '@/lib/supabase/server'
-import type { EventSummary, EventDetail, EventFilters } from '@/lib/types'
+import type { Category, EventSummary, EventDetail, EventFilters } from '@/lib/types'
 
-export function mapEventRow(row: any): EventSummary {
+interface EventRow {
+  id: string
+  title: string
+  cover_image?: string | null
+  city: string
+  district: string
+  start_at: string
+  is_free: boolean
+  capacity?: number | null
+  event_categories?: { categories: Category }[] | null
+  description?: string | null
+  organizer_name?: string | null
+  contact_info?: string | null
+  fee_note?: string | null
+  address?: string | null
+  end_at: string
+  registration_deadline?: string | null
+  status?: EventDetail['status']
+}
+
+export function mapEventRow(row: EventRow): EventSummary {
   return {
     id: row.id,
     title: row.title,
@@ -11,7 +31,7 @@ export function mapEventRow(row: any): EventSummary {
     startAt: row.start_at,
     isFree: row.is_free,
     capacity: row.capacity ?? null,
-    categories: (row.event_categories ?? []).map((ec: any) => ec.categories),
+    categories: (row.event_categories ?? []).map(ec => ec.categories),
   }
 }
 
@@ -31,7 +51,7 @@ export async function listPublishedEvents(filters: EventFilters = {}): Promise<E
   if (filters.keyword) q = q.ilike('title', `%${filters.keyword}%`)
   const { data, error } = await q
   if (error) throw error
-  let events = (data ?? []).map(mapEventRow)
+  let events = ((data ?? []) as unknown as EventRow[]).map(mapEventRow)
   if (filters.categorySlugs?.length) {
     events = events.filter(e =>
       e.categories.some(c => filters.categorySlugs!.includes(c.slug)))
@@ -47,15 +67,16 @@ export async function getEventById(id: string): Promise<EventDetail | null> {
     .eq('id', id).maybeSingle()
   if (error) throw error
   if (!data) return null
+  const row = data as unknown as EventRow
   return {
-    ...mapEventRow(data),
-    description: data.description ?? null,
-    organizerName: data.organizer_name ?? null,
-    contactInfo: data.contact_info ?? null,
-    feeNote: data.fee_note ?? null,
-    address: data.address ?? null,
-    endAt: data.end_at,
-    registrationDeadline: data.registration_deadline ?? null,
-    status: data.status,
+    ...mapEventRow(row),
+    description: row.description ?? null,
+    organizerName: row.organizer_name ?? null,
+    contactInfo: row.contact_info ?? null,
+    feeNote: row.fee_note ?? null,
+    address: row.address ?? null,
+    endAt: row.end_at,
+    registrationDeadline: row.registration_deadline ?? null,
+    status: row.status as EventDetail['status'],
   }
 }
