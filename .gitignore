@@ -27,3 +27,11 @@
 # misc
 .DS_Store
 *.log
+*.pem
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
