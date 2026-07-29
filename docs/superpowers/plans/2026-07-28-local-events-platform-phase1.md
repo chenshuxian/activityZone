@@ -246,12 +246,14 @@ git commit -m "feat: initial db schema and seed categories"
 ## Task 2: RLS 權限政策
 
 **Files:**
-- Create: `supabase/migrations/0002_rls.sql`
+- Create: `supabase/migrations/0003_rls.sql`  *(0002 已被 Task 1 的 grants migration 佔用)*
 - Create: `tests/db/rls.test.ts`
+
+> **注意**：除了 RLS 政策，本 migration 還必須為 `profiles` / `events` / `event_categories` 補上對 `anon`、`authenticated`、`service_role` 的資料表權限（`grant select/insert/update ...`），因為 CLI migration 以 `postgres` 角色執行，預設 ACL 不含這些權限（同 Task 1 的發現）。否則即使 RLS 政策允許，仍會 permission denied。
 
 - [ ] **Step 1: 寫 RLS 政策**
 
-Create `supabase/migrations/0002_rls.sql`:
+Create `supabase/migrations/0003_rls.sql`:
 ```sql
 alter table public.profiles enable row level security;
 alter table public.categories enable row level security;
@@ -467,7 +469,7 @@ git commit -m "feat: supabase clients and shared types"
 
 - [ ] **Step 2: 自動建立 profile 的 trigger**
 
-Create `supabase/migrations/0003_profile_trigger.sql`:
+Create `supabase/migrations/0004_profile_trigger.sql`:
 ```sql
 create or replace function public.handle_new_user() returns trigger
 language plpgsql security definer as $$
@@ -553,7 +555,7 @@ Expected: 需先 `npm run dev` 或設定 playwright webServer；PASS。
 - [ ] **Step 6: Commit**
 
 ```bash
-git add app/auth components/Header.tsx supabase/migrations/0003_profile_trigger.sql e2e/auth.spec.ts
+git add app/auth components/Header.tsx supabase/migrations/0004_profile_trigger.sql e2e/auth.spec.ts
 git commit -m "feat: google login and automatic profile creation"
 ```
 
