@@ -1,26 +1,76 @@
 @import "tailwindcss";
 
+/* ── Design system tokens · Apple-inspired · light default ───────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --background: #ffffff;   /* page base */
+  --surface:    #f5f5f7;   /* alternating section / chip base */
+  --card:       #ffffff;   /* card surface */
+  --foreground: #1d1d1f;   /* primary text */
+  --secondary:  #6e6e73;   /* muted text */
+  --accent:     #0071e3;   /* single brand accent (Apple blue) */
+  --accent-hover:#0077ed;
+  --on-accent:  #ffffff;
+  --hairline:   rgba(0, 0, 0, 0.08);   /* borders / dividers */
+  --chip:       #f5f5f7;
+  --glass:      rgba(255, 255, 255, 0.72); /* frosted nav */
+  --free:       #0071e3;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #000000;
+    --surface:    #1d1d1f;
+    --card:       #1d1d1f;
+    --foreground: #f5f5f7;
+    --secondary:  #a1a1a6;
+    --accent:     #2997ff;
+    --accent-hover:#0a84ff;
+    --on-accent:  #ffffff;
+    --hairline:   rgba(255, 255, 255, 0.12);
+    --chip:       #2c2c2e;
+    --glass:      rgba(22, 22, 24, 0.72);
+    --free:       #2997ff;
   }
+}
+
+/* Expose tokens to Tailwind utilities (bg-*, text-*, border-*, rounded-*, shadow-*) */
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-on-accent: var(--on-accent);
+  --color-hairline: var(--hairline);
+  --color-chip: var(--chip);
+  --color-glass: var(--glass);
+  --color-free: var(--free);
+
+  --radius-card: 18px;
+  --radius-pill: 980px;
+
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-card-hover: 0 14px 40px rgba(0, 0, 0, 0.12);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Tight, refined tracking on large headings (Apple feel) */
+.tracking-hero { letter-spacing: -0.02em; }
+.tracking-tight-a { letter-spacing: -0.01em; }
+
+/* Hide scrollbar on horizontal rows while keeping scroll */
+.no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }
