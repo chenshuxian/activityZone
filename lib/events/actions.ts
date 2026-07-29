@@ -1,6 +1,7 @@
 'use server'
 import { createClient } from '@/lib/supabase/server'
-import { validateEventInput, type EventInput } from '@/lib/events/mutations'
+import { validateEventInput, nextStatusOnApprove, nextStatusOnReject, type EventInput } from '@/lib/events/mutations'
+import type { EventStatus } from '@/lib/types'
 
 interface EventInsert {
   organizer_id: string
@@ -51,4 +52,21 @@ export async function createEvent(input: EventInput) {
       input.categoryIds.map(cid => ({ event_id: data.id, category_id: cid })))
   }
   return { ok: true as const, id: data.id }
+}
+
+export async function approveEvent(id: string) {
+  const supabase = await createClient()
+  const { data: cur } = await supabase.from('events').select('status').eq('id', id).single()
+  const next = nextStatusOnApprove((cur as unknown as { status: EventStatus }).status)
+  const { error } = await supabase.from('events').update({ status: next }).eq('id', id)
+  return { ok: !error, error: error?.message }
+}
+
+export async function rejectEvent(id: string, reason: string) {
+  const supabase = await createClient()
+  const { data: cur } = await supabase.from('events').select('status').eq('id', id).single()
+  const next = nextStatusOnReject((cur as unknown as { status: EventStatus }).status)
+  const { error } = await supabase.from('events')
+    .update({ status: next, reject_reason: reason }).eq('id', id)
+  return { ok: !error, error: error?.message }
 }
