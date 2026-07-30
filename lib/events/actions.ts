@@ -28,6 +28,7 @@ export async function createEvent(input: EventInput) {
     contact_info: input.contactInfo ?? null,
     capacity: input.capacity ?? null,
     status: 'pending',
+    registration_fields: input.registrationFields ?? {},
   }
 
   const { data, error } = await supabase.from('events').insert(insert).select('id').single()

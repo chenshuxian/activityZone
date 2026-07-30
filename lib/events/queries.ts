@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import type { EventSummary, EventDetail, EventFilters } from '@/lib/types'
+import type { EventSummary, EventDetail, EventFilters, MyRegistration } from '@/lib/types'
 import type { Database } from '@/lib/database.types'
 
 type EventRow = Database['public']['Tables']['events']['Row']
@@ -27,6 +27,7 @@ export function mapEventRow(row: EventWithCategories): EventSummary {
     isFree: row.is_free,
     capacity: row.capacity ?? null,
     categories: (row.event_categories ?? []).map(ec => ec.categories),
+    registeredCount: 0,
   }
 }
 
@@ -51,7 +52,13 @@ export async function listPublishedEvents(filters: EventFilters = {}): Promise<E
     events = events.filter(e =>
       e.categories.some(c => filters.categorySlugs!.includes(c.slug)))
   }
-  return events
+
+  const ids = events.map(e => e.id)
+  const { data: counts } = ids.length
+    ? await supabase.from('event_registered_counts').select('event_id, registered_count').in('event_id', ids)
+    : { data: [] }
+  const countMap = new Map((counts ?? []).map(c => [c.event_id, c.registered_count ?? 0]))
+  return events.map(e => ({ ...e, registeredCount: countMap.get(e.id) ?? 0 }))
 }
 
 export async function getEventById(id: string): Promise<EventDetail | null> {
@@ -62,6 +69,17 @@ export async function getEventById(id: string): Promise<EventDetail | null> {
     .eq('id', id).maybeSingle()
   if (error) throw error
   if (!data) return null
+
+  const [{ data: countRow }, { data: myReg }] = await Promise.all([
+    supabase.from('event_registered_counts').select('registered_count').eq('event_id', id).maybeSingle(),
+    supabase.rpc('get_my_registration', { p_event_id: id }),
+  ])
+  const registeredCount = countRow?.registered_count ?? 0
+  const myRow = Array.isArray(myReg) ? myReg[0] : undefined
+  const myRegistration: MyRegistration | null = myRow
+    ? { status: myRow.status as MyRegistration['status'], waitlistPosition: myRow.waitlist_position ?? null }
+    : null
+
   return {
     ...mapEventRow(data),
     description: data.description ?? null,
@@ -75,5 +93,7 @@ export async function getEventById(id: string): Promise<EventDetail | null> {
     // native enum, so the generated type is the widened `string` here. The
     // CHECK constraint guarantees the runtime value is one of EventStatus.
     status: data.status as EventDetail['status'],
+    registeredCount,
+    myRegistration,
   }
 }

@@ -13,6 +13,12 @@ export interface EventSummary {
   isFree: boolean
   capacity: number | null
   categories: Category[]
+  registeredCount: number
+}
+
+export interface MyRegistration {
+  status: 'registered' | 'waitlist'
+  waitlistPosition: number | null
 }
 
 export interface EventDetail extends EventSummary {
@@ -24,6 +30,7 @@ export interface EventDetail extends EventSummary {
   endAt: string
   registrationDeadline: string | null
   status: EventStatus
+  myRegistration: MyRegistration | null
 }
 
 export interface EventFilters {

@@ -1,6 +1,9 @@
 import { getEventById } from '@/lib/events/queries'
 import { notFound } from 'next/navigation'
 import { Chip } from '@/components/ui/Chip'
+import { RegistrationPanel } from '@/components/RegistrationPanel'
+import { parseRegistrationFields, type RegistrationFieldConfig } from '@/lib/events/registration-logic'
+import { createClient } from '@/lib/supabase/server'
 
 export default async function EventDetailPage({
   params,
@@ -8,6 +11,12 @@ export default async function EventDetailPage({
   const { id } = await params
   const ev = await getEventById(id)
   if (!ev || ev.status !== 'published') notFound()
+
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  const { data: rawEvent } = await supabase.from('events').select('registration_fields').eq('id', id).single()
+  const fields = parseRegistrationFields((rawEvent?.registration_fields ?? {}) as RegistrationFieldConfig)
+
   const maps = ev.address
     ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ev.address)}`
     : null
@@ -44,6 +53,19 @@ export default async function EventDetailPage({
             <dd>{ev.organizerName} · {ev.contactInfo}</dd>
           </div>
         </dl>
+
+        <div className="my-6">
+          <RegistrationPanel
+            eventId={ev.id}
+            capacity={ev.capacity}
+            registeredCount={ev.registeredCount}
+            fields={fields}
+            startAt={ev.startAt}
+            registrationDeadline={ev.registrationDeadline}
+            isLoggedIn={Boolean(user)}
+            myRegistration={ev.myRegistration}
+          />
+        </div>
 
         {ev.description && (
           <div className="mt-8 whitespace-pre-wrap leading-relaxed text-foreground">
