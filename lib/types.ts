@@ -59,3 +59,20 @@ export interface EventFilters {
   categorySlugs?: string[]
   keyword?: string
 }
+
+export type NotificationType =
+  | 'registered' | 'waitlisted' | 'promoted' | 'moderation_approved' | 'moderation_rejected'
+
+export interface NotificationPayload {
+  eventId: string
+  eventTitle: string
+  reason?: string
+}
+
+export interface NotificationItem {
+  id: string
+  type: NotificationType
+  payload: NotificationPayload
+  readAt: string | null
+  createdAt: string
+}
