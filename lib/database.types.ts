@@ -272,6 +272,18 @@ export type Database = {
     }
     Functions: {
       cancel_registration: { Args: { p_event_id: string }; Returns: string }
+      get_event_registrations: {
+        Args: { p_event_id: string }
+        Returns: {
+          created_at: string
+          display_name: string
+          email: string
+          form_answers: Json
+          party_size: number
+          status: string
+          user_id: string
+        }[]
+      }
       get_my_registration: {
         Args: { p_event_id: string }
         Returns: {
