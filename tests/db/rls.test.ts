@@ -8,17 +8,15 @@ const service = process.env.SUPABASE_TEST_SERVICE_KEY
 describe.skipIf(!url || !anon || !service)('RLS', () => {
   test('匿名者讀不到 pending 活動', async () => {
     const admin = createClient(url!, service!)
-    // profiles.id references auth.users(id), so a real auth user must exist
-    // first (service_role's admin API bypasses email confirmation etc.)
+    // profiles.id references auth.users(id). Creating the auth user also
+    // auto-creates its profiles row via the on_auth_user_created trigger
+    // (migration 0004), so no manual profile insert is needed.
     const { data: userData, error: uErr } = await admin.auth.admin.createUser({
       email: `seed-${crypto.randomUUID()}@example.com`,
       email_confirm: true,
     })
     expect(uErr).toBeNull()
     const uid = userData!.user!.id
-    // service_role bypasses RLS; create a profile then a pending event
-    const { error: pErr } = await admin.from('profiles').insert({ id: uid, display_name: 'seed-user' })
-    expect(pErr).toBeNull()
     const title = 'hidden-' + uid
     const { error: eErr } = await admin.from('events').insert({
       organizer_id: uid, title, city: '台北市', district: '大安區',
@@ -59,11 +57,9 @@ describe.skipIf(!url || !anon || !service)('RLS', () => {
     })
     expect(uErr).toBeNull()
     const uid = userData!.user!.id
+    // profile auto-created by the on_auth_user_created trigger (migration 0004)
 
-    const { error: pErr } = await admin.from('profiles').insert({ id: uid, display_name: 'owner-user' })
-    expect(pErr).toBeNull()
-
-    const ownerClient = createClient(url!, anon!)
+    const ownerClient = createClient(url!, anon!, { auth: { persistSession: false, autoRefreshToken: false } })
     const { error: signInErr } = await ownerClient.auth.signInWithPassword({ email, password })
     expect(signInErr).toBeNull()
 
