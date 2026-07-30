@@ -2,6 +2,7 @@
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import { NotificationBell } from '@/components/NotificationBell'
 
 export function Header() {
   const supabase = createClient()
@@ -24,9 +25,14 @@ export function Header() {
           <Link href="/events/new" className="transition-colors hover:text-foreground">發布活動</Link>
           {email && <Link href="/dashboard" className="transition-colors hover:text-foreground">我的活動</Link>}
         </nav>
-        <div className="ml-auto">
+        <div className="ml-auto flex items-center gap-4">
           {email
-            ? <button onClick={logout} className="cursor-pointer font-medium text-accent" title={email}>登出</button>
+            ? (
+              <>
+                <NotificationBell />
+                <button onClick={logout} className="cursor-pointer font-medium text-accent" title={email}>登出</button>
+              </>
+            )
             : <button onClick={login} className="cursor-pointer font-medium text-accent">登入</button>}
         </div>
       </div>
