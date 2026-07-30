@@ -43,6 +43,16 @@ export interface DashboardEvent {
   waitlistCount: number
 }
 
+export interface RegistrationRow {
+  userId: string
+  displayName: string | null
+  email: string | null
+  status: 'registered' | 'waitlist'
+  partySize: number
+  formAnswers: Record<string, string>
+  createdAt: string
+}
+
 export interface EventFilters {
   city?: string
   district?: string
