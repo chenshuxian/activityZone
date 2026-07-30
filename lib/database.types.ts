@@ -174,6 +174,41 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          created_at: string
+          id: string
+          payload: Json
+          read_at: string | null
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          payload?: Json
+          read_at?: string | null
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          payload?: Json
+          read_at?: string | null
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -292,6 +327,15 @@ export type Database = {
         }[]
       }
       is_admin: { Args: never; Returns: boolean }
+      notify: {
+        Args: {
+          p_event: string
+          p_reason?: string
+          p_type: string
+          p_user: string
+        }
+        Returns: undefined
+      }
       register_for_event: {
         Args: {
           p_event_id: string
