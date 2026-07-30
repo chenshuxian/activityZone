@@ -2,6 +2,7 @@ import { approveEvent, rejectEvent } from '@/lib/events/actions'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
+import { ModerationGrid } from '@/components/ModerationGrid'
 
 export default async function ModerationPage() {
   const supabase = await createClient()
@@ -27,26 +28,16 @@ export default async function ModerationPage() {
   }
 
   return (
-    <main>
-      <h1 className="text-xl font-bold p-3">待審核活動（{rows.length}）</h1>
-      <ul className="flex flex-col gap-2 p-3">
-        {rows.map(e => (
-          <li key={e.id} className="border rounded p-3">
-            <div className="font-semibold">{e.title}</div>
-            <div className="text-sm text-gray-500">
-              {e.city}{e.district} · {new Date(e.start_at).toLocaleString('zh-TW')} · {e.organizer_name}
-            </div>
-            <div className="flex gap-2 mt-2">
-              <form action={approve}><input type="hidden" name="id" value={e.id} />
-                <button className="bg-green-600 text-white rounded px-3 py-1">核准</button></form>
-              <form action={reject} className="flex gap-1">
-                <input type="hidden" name="id" value={e.id} />
-                <input name="reason" placeholder="退回原因" className="border rounded px-2" />
-                <button className="bg-red-600 text-white rounded px-3 py-1">退回</button></form>
-            </div>
-          </li>
-        ))}
-      </ul>
+    <main className="mx-auto max-w-5xl px-5 py-8">
+      <h1 className="mb-6 text-2xl font-bold tracking-tight-a">待審核活動（{rows.length}）</h1>
+      <ModerationGrid
+        rows={rows.map(e => ({
+          id: e.id, title: e.title, city: e.city, district: e.district,
+          startAt: e.start_at, organizerName: e.organizer_name,
+        }))}
+        approveAction={approve}
+        rejectAction={reject}
+      />
     </main>
   )
 }
