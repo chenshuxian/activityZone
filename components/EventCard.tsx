@@ -8,6 +8,8 @@ export function EventCard({ event }: { event: EventSummary }) {
     day: "numeric",
     weekday: "short",
   });
+  const remaining =
+    event.capacity !== null ? Math.max(event.capacity - event.registeredCount, 0) : null;
   return (
     <Link
       href={`/events/${event.id}`}
@@ -26,6 +28,11 @@ export function EventCard({ event }: { event: EventSummary }) {
           ))}
           {event.isFree && <Chip tone="accent">免費</Chip>}
         </div>
+        {remaining !== null && (
+          <p className="mt-1 text-xs text-secondary">
+            {remaining > 0 ? `剩 ${remaining} 位` : "已額滿"}
+          </p>
+        )}
       </div>
     </Link>
   );

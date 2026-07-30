@@ -207,12 +207,87 @@ export type Database = {
         }
         Relationships: []
       }
+      registrations: {
+        Row: {
+          created_at: string
+          event_id: string
+          form_answers: Json
+          id: string
+          party_size: number
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          form_answers?: Json
+          id?: string
+          party_size?: number
+          status: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          form_answers?: Json
+          id?: string
+          party_size?: number
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "registrations_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "registrations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
-      [_ in never]: never
+      event_registered_counts: {
+        Row: {
+          event_id: string | null
+          registered_count: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "registrations_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
+      cancel_registration: { Args: { p_event_id: string }; Returns: string }
+      get_my_registration: {
+        Args: { p_event_id: string }
+        Returns: {
+          status: string
+          waitlist_position: number
+        }[]
+      }
       is_admin: { Args: never; Returns: boolean }
+      register_for_event: {
+        Args: {
+          p_event_id: string
+          p_form_answers?: Json
+          p_party_size?: number
+        }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
