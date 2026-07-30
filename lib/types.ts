@@ -33,6 +33,26 @@ export interface EventDetail extends EventSummary {
   myRegistration: MyRegistration | null
 }
 
+export interface DashboardEvent {
+  id: string
+  title: string
+  status: EventStatus
+  startAt: string
+  capacity: number | null
+  registeredCount: number
+  waitlistCount: number
+}
+
+export interface RegistrationRow {
+  userId: string
+  displayName: string | null
+  email: string | null
+  status: 'registered' | 'waitlist'
+  partySize: number
+  formAnswers: Record<string, string>
+  createdAt: string
+}
+
 export interface EventFilters {
   city?: string
   district?: string
