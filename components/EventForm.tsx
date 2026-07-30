@@ -13,6 +13,7 @@ export function EventForm({ categories }: { categories: Category[] }) {
 
   async function action(formData: FormData) {
     setSubmitting(true)
+    const fieldSetting = (k: string) => String(formData.get(`rf_${k}`) ?? 'off')
     const res = await createEvent({
       title: String(formData.get('title') ?? ''),
       description: String(formData.get('description') ?? ''),
@@ -26,6 +27,11 @@ export function EventForm({ categories }: { categories: Category[] }) {
       contactInfo: String(formData.get('contactInfo') ?? ''),
       capacity: formData.get('capacity') ? Number(formData.get('capacity')) : null,
       categoryIds: formData.getAll('categoryIds').map(String),
+      registrationFields: {
+        party_size: fieldSetting('party_size'),
+        phone: fieldSetting('phone'),
+        note: fieldSetting('note'),
+      },
     })
     if (!res.ok) { setErrors(res.errors); setSubmitting(false); return }
     router.push('/?submitted=1')
@@ -56,6 +62,19 @@ export function EventForm({ categories }: { categories: Category[] }) {
         {categories.map(c => (
           <label key={c.id} className="border rounded px-2 py-1">
             <input type="checkbox" name="categoryIds" value={c.id} /> {c.icon} {c.name}
+          </label>
+        ))}
+      </fieldset>
+      <fieldset className="rounded-lg border border-hairline p-3">
+        <legend className="px-1 text-sm text-secondary">報名要收集的欄位</legend>
+        {([['party_size','同行人數'],['phone','聯絡電話'],['note','備註']] as const).map(([k,label]) => (
+          <label key={k} className="flex items-center justify-between py-1 text-sm">
+            {label}
+            <select name={`rf_${k}`} defaultValue="off" className="rounded border border-hairline px-2 py-1">
+              <option value="off">不收集</option>
+              <option value="optional">選填</option>
+              <option value="required">必填</option>
+            </select>
           </label>
         ))}
       </fieldset>
