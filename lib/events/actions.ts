@@ -5,6 +5,7 @@ import type { EventStatus } from '@/lib/types'
 import type { Database } from '@/lib/database.types'
 
 type EventInsert = Database['public']['Tables']['events']['Insert']
+type EventUpdate = Database['public']['Tables']['events']['Update']
 
 export async function createEvent(input: EventInput) {
   const errors = validateEventInput(input)
@@ -39,6 +40,38 @@ export async function createEvent(input: EventInput) {
       input.categoryIds.map(cid => ({ event_id: data.id, category_id: cid })))
   }
   return { ok: true as const, id: data.id }
+}
+
+export async function updateEvent(eventId: string, input: EventInput) {
+  const errors = validateEventInput(input)
+  if (errors.length) return { ok: false as const, errors }
+  const supabase = await createClient()
+
+  const update: EventUpdate = {
+    title: input.title,
+    description: input.description ?? null,
+    city: input.city,
+    district: input.district,
+    address: input.address ?? null,
+    start_at: input.startAt,
+    end_at: input.endAt,
+    is_free: input.isFree,
+    fee_note: input.feeNote ?? null,
+    organizer_name: input.organizerName ?? null,
+    contact_info: input.contactInfo ?? null,
+    capacity: input.capacity ?? null,
+    registration_fields: input.registrationFields ?? {},
+  }
+
+  const { error } = await supabase.from('events').update(update).eq('id', eventId)
+  if (error) return { ok: false as const, errors: [error.message] }
+
+  await supabase.from('event_categories').delete().eq('event_id', eventId)
+  if (input.categoryIds.length) {
+    await supabase.from('event_categories').insert(
+      input.categoryIds.map(cid => ({ event_id: eventId, category_id: cid })))
+  }
+  return { ok: true as const }
 }
 
 export async function approveEvent(id: string) {
