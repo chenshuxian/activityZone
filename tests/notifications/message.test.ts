@@ -16,3 +16,7 @@ test('退回含原因', () => {
 test('退回無原因', () => {
   expect(notificationMessage('moderation_rejected', p)).toBe('活動被退回：晨跑')
 })
+test('即將開始訊息', () => {
+  expect(notificationMessage('starting_soon', { eventId: 'e1', eventTitle: '晨跑' }))
+    .toBe('活動即將開始：晨跑')
+})
