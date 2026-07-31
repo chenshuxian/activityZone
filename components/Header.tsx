@@ -24,6 +24,7 @@ export function Header() {
           <Link href="/" className="transition-colors hover:text-foreground">探索</Link>
           <Link href="/events/new" className="transition-colors hover:text-foreground">發布活動</Link>
           {email && <Link href="/dashboard" className="transition-colors hover:text-foreground">我的活動</Link>}
+          {email && <Link href="/favorites" className="transition-colors hover:text-foreground">我的收藏</Link>}
         </nav>
         <div className="ml-auto flex items-center gap-4">
           {email

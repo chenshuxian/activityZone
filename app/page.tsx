@@ -4,6 +4,7 @@ import { FilterBar } from '@/components/FilterBar'
 import { Row } from '@/components/ui/Row'
 import { ButtonLink } from '@/components/ui/Button'
 import { listPublishedEvents } from '@/lib/events/queries'
+import { getMyFavoriteEventIds } from '@/lib/favorites'
 import { createClient } from '@/lib/supabase/server'
 
 export default async function HomePage({
@@ -20,6 +21,7 @@ export default async function HomePage({
     keyword: sp.keyword,
   })
   const freeEvents = events.filter(e => e.isFree)
+  const favIds = new Set(await getMyFavoriteEventIds())
 
   return (
     <main>
@@ -52,7 +54,7 @@ export default async function HomePage({
             <p className="text-secondary">目前沒有符合的活動</p>
           ) : (
             <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-              {events.map(e => <EventCard key={e.id} event={e} />)}
+              {events.map(e => <EventCard key={e.id} event={e} isFavorited={favIds.has(e.id)} />)}
             </div>
           )}
         </section>
@@ -65,7 +67,7 @@ export default async function HomePage({
           <Row title="近期活動" subtitle="越近期，越前面。">
             {events.map(e => (
               <div key={e.id} className="w-[240px] shrink-0">
-                <EventCard event={e} />
+                <EventCard event={e} isFavorited={favIds.has(e.id)} />
               </div>
             ))}
           </Row>
@@ -74,7 +76,7 @@ export default async function HomePage({
               <Row title="免費活動" subtitle="不用花錢也能很精彩。">
                 {freeEvents.map(e => (
                   <div key={e.id} className="w-[240px] shrink-0">
-                    <EventCard event={e} />
+                    <EventCard event={e} isFavorited={favIds.has(e.id)} />
                   </div>
                 ))}
               </Row>
