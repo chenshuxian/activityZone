@@ -8,5 +8,6 @@ export function notificationMessage(type: NotificationType, payload: Notificatio
     case 'promoted': return `候補遞補成功：${t}`
     case 'moderation_approved': return `活動已通過審核：${t}`
     case 'moderation_rejected': return `活動被退回：${t}${payload.reason ? `（${payload.reason}）` : ''}`
+    case 'starting_soon': return `活動即將開始：${t}`
   }
 }

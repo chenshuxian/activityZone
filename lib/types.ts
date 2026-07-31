@@ -61,7 +61,7 @@ export interface EventFilters {
 }
 
 export type NotificationType =
-  | 'registered' | 'waitlisted' | 'promoted' | 'moderation_approved' | 'moderation_rejected'
+  | 'registered' | 'waitlisted' | 'promoted' | 'moderation_approved' | 'moderation_rejected' | 'starting_soon'
 
 export interface NotificationPayload {
   eventId: string
