@@ -1,10 +1,12 @@
 import { Suspense } from 'react'
 import { EventCard } from '@/components/EventCard'
 import { FilterBar } from '@/components/FilterBar'
+import { BannerCarousel } from '@/components/BannerCarousel'
 import { Row } from '@/components/ui/Row'
 import { ButtonLink } from '@/components/ui/Button'
 import { listPublishedEvents } from '@/lib/events/queries'
 import { getMyFavoriteEventIds } from '@/lib/favorites'
+import { getHomeBanners } from '@/lib/banners'
 import { createClient } from '@/lib/supabase/server'
 
 export default async function HomePage({
@@ -22,6 +24,7 @@ export default async function HomePage({
   })
   const freeEvents = events.filter(e => e.isFree)
   const favIds = new Set(await getMyFavoriteEventIds())
+  const banners = filtering ? [] : await getHomeBanners()
 
   return (
     <main>
@@ -40,6 +43,8 @@ export default async function HomePage({
           </div>
         </section>
       )}
+
+      {!filtering && <BannerCarousel banners={banners} />}
 
       <div id="browse" className="border-y border-hairline bg-surface/60">
         <Suspense fallback={null}>

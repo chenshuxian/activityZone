@@ -76,3 +76,11 @@ export interface NotificationItem {
   readAt: string | null
   createdAt: string
 }
+
+export interface BannerItem {
+  eventId: string
+  title: string
+  city: string
+  district: string
+  startAt: string
+}
