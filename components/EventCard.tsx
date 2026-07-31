@@ -1,8 +1,15 @@
 import Link from "next/link";
 import type { EventSummary } from "@/lib/types";
 import { Chip } from "@/components/ui/Chip";
+import { FavoriteButton } from "@/components/FavoriteButton";
 
-export function EventCard({ event }: { event: EventSummary }) {
+export function EventCard({
+  event,
+  isFavorited,
+}: {
+  event: EventSummary;
+  isFavorited?: boolean;
+}) {
   const date = new Date(event.startAt).toLocaleDateString("zh-TW", {
     month: "numeric",
     day: "numeric",
@@ -15,7 +22,9 @@ export function EventCard({ event }: { event: EventSummary }) {
       href={`/events/${event.id}`}
       className="group block h-full w-full overflow-hidden rounded-card bg-card shadow-card transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-card-hover"
     >
-      <div className="h-32 bg-gradient-to-br from-[#a8c0ff] to-[#3f6cd8]" />
+      <div className="relative h-32 bg-gradient-to-br from-[#a8c0ff] to-[#3f6cd8]">
+        <FavoriteButton variant="overlay" eventId={event.id} initialFavorited={isFavorited ?? false} />
+      </div>
       <div className="p-4">
         <h3 className="font-semibold tracking-tight-a">{event.title}</h3>
         <p className="mt-1 text-sm text-secondary">
