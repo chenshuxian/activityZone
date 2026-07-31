@@ -174,6 +174,42 @@ export type Database = {
           },
         ]
       }
+      favorites: {
+        Row: {
+          created_at: string
+          event_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorites_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "favorites_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notifications: {
         Row: {
           created_at: string
@@ -307,6 +343,7 @@ export type Database = {
     }
     Functions: {
       cancel_registration: { Args: { p_event_id: string }; Returns: string }
+      expire_past_events: { Args: never; Returns: number }
       get_event_registrations: {
         Args: { p_event_id: string }
         Returns: {
@@ -336,6 +373,7 @@ export type Database = {
         }
         Returns: undefined
       }
+      notify_upcoming_events: { Args: never; Returns: number }
       register_for_event: {
         Args: {
           p_event_id: string

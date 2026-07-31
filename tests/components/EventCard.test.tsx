@@ -1,5 +1,9 @@
 import { render, screen } from '@testing-library/react'
-import { expect, test } from 'vitest'
+import { expect, test, vi } from 'vitest'
+
+vi.mock('@/lib/favorites', () => ({ toggleFavorite: vi.fn().mockResolvedValue({ ok: true, favorited: true }) }))
+vi.mock('@/lib/supabase/client', () => ({ createClient: () => ({ auth: { signInWithOAuth: vi.fn() } }) }))
+
 import { EventCard } from '@/components/EventCard'
 
 const ev = {

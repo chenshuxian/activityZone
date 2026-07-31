@@ -2,6 +2,7 @@ import { getEventById } from '@/lib/events/queries'
 import { notFound } from 'next/navigation'
 import { Chip } from '@/components/ui/Chip'
 import { RegistrationPanel } from '@/components/RegistrationPanel'
+import { FavoriteButton } from '@/components/FavoriteButton'
 import { parseRegistrationFields, type RegistrationFieldConfig } from '@/lib/events/registration-logic'
 import { createClient } from '@/lib/supabase/server'
 
@@ -16,6 +17,9 @@ export default async function EventDetailPage({
   const { data: { user } } = await supabase.auth.getUser()
   const { data: rawEvent } = await supabase.from('events').select('registration_fields').eq('id', id).single()
   const fields = parseRegistrationFields((rawEvent?.registration_fields ?? {}) as RegistrationFieldConfig)
+  const { data: fav } = user
+    ? await supabase.from('favorites').select('id').eq('user_id', user.id).eq('event_id', id).maybeSingle()
+    : { data: null }
 
   const maps = ev.address
     ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ev.address)}`
@@ -54,7 +58,8 @@ export default async function EventDetailPage({
           </div>
         </dl>
 
-        <div className="my-6">
+        <div className="my-6 space-y-3">
+          <FavoriteButton eventId={ev.id} initialFavorited={Boolean(fav)} variant="inline" />
           <RegistrationPanel
             eventId={ev.id}
             capacity={ev.capacity}
