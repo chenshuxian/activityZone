@@ -1,7 +1,9 @@
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
+import { ChevronUp, ChevronDown, Trash2, Image as ImageIcon } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { listManualBanners, addBanner, removeBanner, reorderBanner } from '@/lib/banners'
+import { EmptyState } from '@/components/ui/EmptyState'
 
 export default async function AdminBannersPage() {
   const supabase = await createClient()
@@ -41,17 +43,19 @@ export default async function AdminBannersPage() {
         <button className="rounded-pill bg-accent px-4 py-2 text-sm font-medium text-on-accent">加入 Banner</button>
       </form>
 
+      {banners.length === 0 && (
+        <EmptyState icon={ImageIcon} title="目前沒有手動 banner" description="首頁會自動補近期活動" />
+      )}
       <ul className="flex flex-col gap-2">
-        {banners.length === 0 && <li className="text-secondary">目前沒有手動 banner（首頁會自動補近期活動）。</li>}
         {banners.map(b => (
           <li key={b.id} className="flex items-center gap-3 rounded-card border border-hairline bg-card p-3">
             <span className="flex-1 font-medium">{b.title}</span>
             <form action={move}><input type="hidden" name="id" value={b.id} /><input type="hidden" name="dir" value="up" />
-              <button className="px-2 text-secondary hover:text-foreground" aria-label="上移">↑</button></form>
+              <button className="px-2 text-secondary hover:text-foreground" aria-label="上移"><ChevronUp size={16} /></button></form>
             <form action={move}><input type="hidden" name="id" value={b.id} /><input type="hidden" name="dir" value="down" />
-              <button className="px-2 text-secondary hover:text-foreground" aria-label="下移">↓</button></form>
+              <button className="px-2 text-secondary hover:text-foreground" aria-label="下移"><ChevronDown size={16} /></button></form>
             <form action={remove}><input type="hidden" name="id" value={b.id} />
-              <button className="px-2 text-red-600" aria-label="移除">移除</button></form>
+              <button className="px-2 text-red-600" aria-label="移除"><Trash2 size={16} /></button></form>
           </li>
         ))}
       </ul>

@@ -1,5 +1,7 @@
 'use client'
 import { useState } from 'react'
+import { ChevronUp, ChevronDown, CheckCircle2 } from 'lucide-react'
+import { EmptyState } from '@/components/ui/EmptyState'
 
 export interface ModerationRow {
   id: string
@@ -38,7 +40,6 @@ export function ModerationGrid({
 
   const toggle = (k: SortKey) =>
     setSort(s => (s.key === k ? { key: k, dir: (s.dir * -1) as 1 | -1 } : { key: k, dir: 1 }))
-  const arrow = (k: SortKey) => (sort.key === k ? (sort.dir === 1 ? ' ↑' : ' ↓') : '')
 
   const th = 'cursor-pointer select-none px-3 py-2.5 text-left font-medium text-secondary hover:text-foreground'
 
@@ -56,7 +57,12 @@ export function ModerationGrid({
           <tr className="border-b border-hairline bg-surface">
             {columns.map(c => (
               <th key={c.key} className={th} onClick={() => toggle(c.key)}>
-                {c.label}{arrow(c.key)}
+                {c.label}
+                {sort.key === c.key && (
+                  sort.dir === 1
+                    ? <ChevronUp size={14} className="ml-0.5 inline" />
+                    : <ChevronDown size={14} className="ml-0.5 inline" />
+                )}
               </th>
             ))}
             <th className="px-3 py-2.5 text-left font-medium text-secondary">動作</th>
@@ -92,7 +98,7 @@ export function ModerationGrid({
             </tr>
           ))}
           {sorted.length === 0 && (
-            <tr><td colSpan={5} className="px-3 py-8 text-center text-secondary">目前沒有待審核的活動。</td></tr>
+            <tr><td colSpan={5}><EmptyState icon={CheckCircle2} title="目前沒有待審核的活動" /></td></tr>
           )}
         </tbody>
       </table>

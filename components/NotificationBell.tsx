@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { Bell } from 'lucide-react'
 import { getNotifications, getUnreadCount, markRead, markAllRead } from '@/lib/notifications'
 import { notificationMessage } from '@/lib/notifications-logic'
 import type { NotificationItem } from '@/lib/types'
@@ -17,7 +18,7 @@ export function NotificationBellView(props: {
   return (
     <div className="relative">
       <button onClick={onOpen} className="relative cursor-pointer text-lg" aria-label="通知">
-        🔔
+        <Bell size={20} aria-hidden />
         {unread > 0 && (
           <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-pill bg-accent px-1 text-[10px] font-bold text-on-accent">
             {unread}

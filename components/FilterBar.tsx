@@ -1,4 +1,5 @@
 'use client'
+import { Search } from 'lucide-react'
 import { CITIES, REGIONS } from '@/lib/regions'
 import type { Category } from '@/lib/types'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -21,12 +22,15 @@ export function FilterBar({ categories }: { categories: Category[] }) {
     'rounded-full border border-hairline bg-card px-3 py-1.5 text-sm text-foreground outline-none focus:border-accent'
   return (
     <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-2 px-5 py-4">
-      <input
-        defaultValue={params.get('keyword') ?? ''}
-        placeholder="搜尋活動…"
-        onKeyDown={e => { if (e.key === 'Enter') setParam('keyword', (e.target as HTMLInputElement).value) }}
-        className="min-w-[180px] flex-1 rounded-full border border-hairline bg-card px-4 py-1.5 text-sm text-foreground outline-none placeholder:text-secondary focus:border-accent"
-      />
+      <div className="relative min-w-[180px] flex-1">
+        <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-secondary" aria-hidden />
+        <input
+          defaultValue={params.get('keyword') ?? ''}
+          placeholder="搜尋活動"
+          onKeyDown={e => { if (e.key === 'Enter') setParam('keyword', (e.target as HTMLInputElement).value) }}
+          className="w-full rounded-full border border-hairline bg-card pl-9 pr-4 py-1.5 text-sm text-foreground outline-none placeholder:text-secondary focus:border-accent"
+        />
+      </div>
       <select value={city} onChange={e => setParam('city', e.target.value)} className={selectClass}>
         <option value="">全部縣市</option>
         {CITIES.map(c => <option key={c} value={c}>{c}</option>)}
