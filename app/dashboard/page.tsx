@@ -1,9 +1,11 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
+import { CalendarPlus } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { getMyEvents } from '@/lib/events/dashboard'
 import { StatusBadge } from '@/components/StatusBadge'
 import { ButtonLink } from '@/components/ui/Button'
+import { EmptyState } from '@/components/ui/EmptyState'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -17,7 +19,12 @@ export default async function DashboardPage() {
         <ButtonLink href="/events/new">發布活動</ButtonLink>
       </div>
       {events.length === 0 ? (
-        <p className="text-secondary">你還沒有發布任何活動。</p>
+        <EmptyState
+          icon={CalendarPlus}
+          title="你還沒有發布任何活動"
+          description="發布你的第一個活動吧"
+          action={<ButtonLink href="/events/new">發布活動</ButtonLink>}
+        />
       ) : (
         <ul className="flex flex-col gap-3">
           {events.map(e => (

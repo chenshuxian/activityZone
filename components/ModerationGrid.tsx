@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
-import { ChevronUp, ChevronDown } from 'lucide-react'
+import { ChevronUp, ChevronDown, CheckCircle2 } from 'lucide-react'
+import { EmptyState } from '@/components/ui/EmptyState'
 
 export interface ModerationRow {
   id: string
@@ -97,7 +98,7 @@ export function ModerationGrid({
             </tr>
           ))}
           {sorted.length === 0 && (
-            <tr><td colSpan={5} className="px-3 py-8 text-center text-secondary">目前沒有待審核的活動。</td></tr>
+            <tr><td colSpan={5}><EmptyState icon={CheckCircle2} title="目前沒有待審核的活動" /></td></tr>
           )}
         </tbody>
       </table>

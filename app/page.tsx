@@ -1,9 +1,11 @@
 import { Suspense } from 'react'
+import { CalendarX, SearchX } from 'lucide-react'
 import { EventCard } from '@/components/EventCard'
 import { FilterBar } from '@/components/FilterBar'
 import { BannerCarousel } from '@/components/BannerCarousel'
 import { Row } from '@/components/ui/Row'
 import { ButtonLink } from '@/components/ui/Button'
+import { EmptyState } from '@/components/ui/EmptyState'
 import { listPublishedEvents } from '@/lib/events/queries'
 import { getMyFavoriteEventIds } from '@/lib/favorites'
 import { getHomeBanners } from '@/lib/banners'
@@ -56,7 +58,7 @@ export default async function HomePage({
         <section className="mx-auto max-w-6xl px-5 py-10">
           <p className="mb-5 text-secondary">{events.length} 個結果</p>
           {events.length === 0 ? (
-            <p className="text-secondary">目前沒有符合的活動</p>
+            <EmptyState icon={SearchX} title="沒有符合的活動" description="換個條件再試試" />
           ) : (
             <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
               {events.map(e => <EventCard key={e.id} event={e} isFavorited={favIds.has(e.id)} />)}
@@ -64,9 +66,12 @@ export default async function HomePage({
           )}
         </section>
       ) : events.length === 0 ? (
-        <p className="mx-auto max-w-6xl px-5 py-16 text-center text-secondary">
-          目前還沒有活動，成為第一個發布的人吧！
-        </p>
+        <EmptyState
+          icon={CalendarX}
+          title="目前還沒有活動"
+          description="成為第一個發布的人吧！"
+          action={<ButtonLink href="/events/new">發布活動</ButtonLink>}
+        />
       ) : (
         <>
           <Row title="近期活動" subtitle="越近期，越前面。">
