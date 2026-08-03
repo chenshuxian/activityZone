@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { Heart } from 'lucide-react'
+import { Heart, Loader2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { toggleFavorite } from '@/lib/favorites'
 
@@ -37,7 +37,9 @@ export function FavoriteButton({
   return (
     <button onClick={onClick} aria-label="收藏" aria-pressed={fav}
       className={`${cls} ${fav ? 'text-accent' : 'text-secondary'} cursor-pointer`}>
-      <Heart size={variant === 'overlay' ? 18 : 20} className={fav ? 'fill-current' : ''} aria-hidden />
+      {busy
+        ? <Loader2 size={variant === 'overlay' ? 18 : 20} className="animate-spin" aria-hidden />
+        : <Heart size={variant === 'overlay' ? 18 : 20} className={fav ? 'fill-current' : ''} aria-hidden />}
     </button>
   )
 }

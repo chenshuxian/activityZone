@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Check } from 'lucide-react'
+import { Check, Loader2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { register, cancelRegistration } from '@/lib/events/registration'
 import { Button } from '@/components/ui/Button'
@@ -62,11 +62,15 @@ export function RegistrationPanel(props: {
   if (myRegistration?.status === 'registered')
     return <div className={box}><p className="mb-3 font-semibold text-accent"><Check size={16} className="mr-1 inline" aria-hidden />已報名</p>
       {error && <p className="mb-2 text-sm text-red-600">{error}</p>}
-      <Button variant="ghost" disabled={busy} onClick={doCancel}>取消報名</Button></div>
+      <Button variant="ghost" disabled={busy} onClick={doCancel}>
+        {busy && <Loader2 size={16} className="mr-1 inline animate-spin" aria-hidden />}取消報名
+      </Button></div>
   if (myRegistration?.status === 'waitlist')
     return <div className={box}><p className="mb-3 font-semibold">候補中（第 {myRegistration.waitlistPosition} 位）</p>
       {error && <p className="mb-2 text-sm text-red-600">{error}</p>}
-      <Button variant="ghost" disabled={busy} onClick={doCancel}>取消候補</Button></div>
+      <Button variant="ghost" disabled={busy} onClick={doCancel}>
+        {busy && <Loader2 size={16} className="mr-1 inline animate-spin" aria-hidden />}取消候補
+      </Button></div>
   if (closed) return <div className={box}><Button disabled>報名已截止</Button></div>
 
   return (
@@ -82,7 +86,9 @@ export function RegistrationPanel(props: {
             className="mt-1 w-full rounded-lg border border-hairline bg-card px-3 py-1.5" />
         </label>
       ))}
-      <Button type="submit" disabled={busy}>{full ? '加入候補' : '我要報名'}</Button>
+      <Button type="submit" disabled={busy}>
+        {busy && <Loader2 size={16} className="mr-1 inline animate-spin" aria-hidden />}{full ? '加入候補' : '我要報名'}
+      </Button>
     </form>
   )
 }
