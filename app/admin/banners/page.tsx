@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
+import { ChevronUp, ChevronDown, Trash2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { listManualBanners, addBanner, removeBanner, reorderBanner } from '@/lib/banners'
 
@@ -47,11 +48,11 @@ export default async function AdminBannersPage() {
           <li key={b.id} className="flex items-center gap-3 rounded-card border border-hairline bg-card p-3">
             <span className="flex-1 font-medium">{b.title}</span>
             <form action={move}><input type="hidden" name="id" value={b.id} /><input type="hidden" name="dir" value="up" />
-              <button className="px-2 text-secondary hover:text-foreground" aria-label="上移">↑</button></form>
+              <button className="px-2 text-secondary hover:text-foreground" aria-label="上移"><ChevronUp size={16} /></button></form>
             <form action={move}><input type="hidden" name="id" value={b.id} /><input type="hidden" name="dir" value="down" />
-              <button className="px-2 text-secondary hover:text-foreground" aria-label="下移">↓</button></form>
+              <button className="px-2 text-secondary hover:text-foreground" aria-label="下移"><ChevronDown size={16} /></button></form>
             <form action={remove}><input type="hidden" name="id" value={b.id} />
-              <button className="px-2 text-red-600" aria-label="移除">移除</button></form>
+              <button className="px-2 text-red-600" aria-label="移除"><Trash2 size={16} /></button></form>
           </li>
         ))}
       </ul>

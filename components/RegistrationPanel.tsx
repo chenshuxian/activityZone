@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { Check } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { register, cancelRegistration } from '@/lib/events/registration'
 import { Button } from '@/components/ui/Button'
@@ -59,7 +60,7 @@ export function RegistrationPanel(props: {
   if (!isLoggedIn) return <div className={box}><Button onClick={login}>登入後報名</Button></div>
 
   if (myRegistration?.status === 'registered')
-    return <div className={box}><p className="mb-3 font-semibold text-accent">✓ 已報名</p>
+    return <div className={box}><p className="mb-3 font-semibold text-accent"><Check size={16} className="mr-1 inline" aria-hidden />已報名</p>
       {error && <p className="mb-2 text-sm text-red-600">{error}</p>}
       <Button variant="ghost" disabled={busy} onClick={doCancel}>取消報名</Button></div>
   if (myRegistration?.status === 'waitlist')
