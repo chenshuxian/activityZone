@@ -41,6 +41,7 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
     contactInfo: ev.contact_info ?? '',
     categoryIds: (ev.event_categories ?? []).map((c: { category_id: string }) => c.category_id),
     registrationFields,
+    coverImage: ev.cover_image ?? '',
   }
   return (
     <main>

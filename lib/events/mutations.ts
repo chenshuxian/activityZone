@@ -15,6 +15,7 @@ export interface EventInput {
   capacity?: number | null
   categoryIds: string[]
   registrationFields?: { party_size?: string; phone?: string; note?: string }
+  coverImage?: string | null
 }
 
 export function validateEventInput(input: EventInput): string[] {
