@@ -22,6 +22,11 @@ export function BannerCarousel({ banners }: { banners: BannerItem[] }) {
     <div className="mx-auto max-w-6xl px-5 py-4">
       <Link href={`/events/${b.eventId}`}
         className="relative block h-40 overflow-hidden rounded-card bg-gradient-to-br from-[#6366f1] to-[#ec4899]">
+        {b.coverImage && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={b.coverImage} alt={b.title} className="absolute inset-0 h-full w-full object-cover" />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
         <div className="absolute bottom-4 left-5 text-white">
           <div className="text-xl font-bold tracking-tight-a">{b.title}</div>
           <div className="text-sm opacity-90">{date} · {b.city}{b.district}</div>

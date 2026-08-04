@@ -83,4 +83,5 @@ export interface BannerItem {
   city: string
   district: string
   startAt: string
+  coverImage?: string | null
 }
