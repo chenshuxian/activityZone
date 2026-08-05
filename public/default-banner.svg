@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 450" preserveAspectRatio="xMidYMid slice" role="img" aria-label="活動預設封面">
+  <defs>
+    <linearGradient id="base" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a2540"/>
+      <stop offset="40%" stop-color="#0059c1"/>
+      <stop offset="72%" stop-color="#0071e3"/>
+      <stop offset="100%" stop-color="#3aa0ff"/>
+    </linearGradient>
+    <radialGradient id="glowBright" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#eaf4ff" stop-opacity="0.95"/>
+      <stop offset="45%" stop-color="#9ecbff" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#9ecbff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowSky" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#cfe6ff" stop-opacity="0.9"/>
+      <stop offset="50%" stop-color="#5aa9ff" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#5aa9ff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowDeep" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#7db9ff" stop-opacity="0.8"/>
+      <stop offset="50%" stop-color="#2680eb" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#2680eb" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
+    <linearGradient id="scrim" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#000000" stop-opacity="0.35"/>
+      <stop offset="55%" stop-color="#000000" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="450" fill="url(#base)"/>
+
+  <!-- soft bokeh lights, denser toward upper-right, sparse lower-left -->
+  <g filter="url(#soft)">
+    <circle cx="1250" cy="120" r="90" fill="url(#glowBright)"/>
+    <circle cx="1420" cy="230" r="70" fill="url(#glowSky)"/>
+    <circle cx="1080" cy="70" r="55" fill="url(#glowDeep)"/>
+    <circle cx="1520" cy="90" r="45" fill="url(#glowBright)"/>
+    <circle cx="1330" cy="330" r="60" fill="url(#glowSky)"/>
+    <circle cx="960" cy="200" r="40" fill="url(#glowSky)"/>
+    <circle cx="1180" cy="300" r="34" fill="url(#glowDeep)"/>
+    <circle cx="820" cy="90" r="30" fill="url(#glowBright)"/>
+    <circle cx="700" cy="260" r="26" fill="url(#glowSky)"/>
+    <circle cx="560" cy="120" r="22" fill="url(#glowDeep)"/>
+    <circle cx="1470" cy="360" r="30" fill="url(#glowSky)"/>
+    <circle cx="900" cy="360" r="24" fill="url(#glowBright)"/>
+  </g>
+
+  <!-- gentle bottom scrim for overlaid text readability -->
+  <rect width="1600" height="450" fill="url(#scrim)"/>
+</svg>
