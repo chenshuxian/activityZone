@@ -23,6 +23,10 @@ export function EventCard({
       className="group block h-full w-full overflow-hidden rounded-card bg-card shadow-card transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-card-hover"
     >
       <div className="relative h-32 bg-gradient-to-br from-[#a8c0ff] to-[#3f6cd8]">
+        {event.coverImage && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={event.coverImage} alt={event.title} className="absolute inset-0 h-full w-full object-cover" />
+        )}
         <FavoriteButton variant="overlay" eventId={event.id} initialFavorited={isFavorited ?? false} />
       </div>
       <div className="p-4">

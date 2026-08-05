@@ -6,6 +6,7 @@ import { CITIES, REGIONS } from '@/lib/regions'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
+import { CoverImageUpload } from '@/components/CoverImageUpload'
 
 export interface EventFormInitial {
   id: string
@@ -22,6 +23,7 @@ export interface EventFormInitial {
   contactInfo?: string
   categoryIds?: string[]
   registrationFields?: { party_size?: string; phone?: string; note?: string }
+  coverImage?: string
 }
 
 export interface EventFormProps {
@@ -51,6 +53,7 @@ const labelClass = 'mb-1 block text-sm font-medium'
 export function EventForm({ categories, initial, submitAction, submitLabel }: EventFormProps) {
   const router = useRouter()
   const [city, setCity] = useState(initial?.city ?? '')
+  const [coverUrl, setCoverUrl] = useState<string | null>(initial?.coverImage ?? null)
   const [errors, setErrors] = useState<string[]>([])
   const [submitting, setSubmitting] = useState(false)
   const today = new Date().toISOString().slice(0, 10)
@@ -80,6 +83,7 @@ export function EventForm({ categories, initial, submitAction, submitLabel }: Ev
         phone: fieldSetting('phone'),
         note: fieldSetting('note'),
       },
+      coverImage: coverUrl,
     }
     const res = await (submitAction ?? createEvent)(input)
     if (!res.ok) { setErrors(res.errors ?? []); setSubmitting(false); return }
@@ -99,6 +103,11 @@ export function EventForm({ categories, initial, submitAction, submitLabel }: Ev
       <div>
         <label className={labelClass}>活動標題</label>
         <input name="title" placeholder="例：大安森林公園晨間瑜珈" defaultValue={initial?.title ?? ''} className={inputClass} />
+      </div>
+
+      <div>
+        <label className={labelClass}>封面圖（選填）</label>
+        <CoverImageUpload initialUrl={initial?.coverImage} onChange={setCoverUrl} />
       </div>
 
       <div className="grid grid-cols-2 gap-3">
