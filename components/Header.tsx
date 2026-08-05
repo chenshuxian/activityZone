@@ -8,8 +8,16 @@ import { MobileNav } from '@/components/MobileNav'
 export function Header() {
   const supabase = createClient()
   const [email, setEmail] = useState<string | null>(null)
+  const [isAdmin, setIsAdmin] = useState(false)
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setEmail(data.user?.email ?? null))
+    supabase.auth.getUser().then(async ({ data }) => {
+      const user = data.user
+      setEmail(user?.email ?? null)
+      if (user) {
+        const { data: me } = await supabase.from('profiles').select('role').eq('id', user.id).single()
+        setIsAdmin(me?.role === 'admin')
+      }
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   const login = () => supabase.auth.signInWithOAuth({
@@ -21,12 +29,13 @@ export function Header() {
     <header className="sticky top-0 z-40 border-b border-hairline bg-glass backdrop-blur-xl backdrop-saturate-150">
       <div className="mx-auto flex h-12 max-w-6xl items-center gap-6 px-5 text-sm">
         <Link href="/" className="text-[15px] font-bold tracking-tight-a">活動網</Link>
-        <MobileNav loggedIn={Boolean(email)} />
+        <MobileNav loggedIn={Boolean(email)} isAdmin={isAdmin} />
         <nav className="hidden items-center gap-5 text-secondary sm:flex">
           <Link href="/" className="transition-colors hover:text-foreground">探索</Link>
           <Link href="/events/new" className="transition-colors hover:text-foreground">發布活動</Link>
           {email && <Link href="/dashboard" className="transition-colors hover:text-foreground">我的活動</Link>}
           {email && <Link href="/favorites" className="transition-colors hover:text-foreground">我的收藏</Link>}
+          {isAdmin && <Link href="/admin/moderation" className="font-medium text-accent transition-colors hover:text-accent-hover">管理後台</Link>}
         </nav>
         <div className="ml-auto flex items-center gap-4">
           {email

@@ -3,7 +3,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { Menu, X } from 'lucide-react'
 
-export function MobileNav({ loggedIn }: { loggedIn: boolean }) {
+export function MobileNav({ loggedIn, isAdmin = false }: { loggedIn: boolean; isAdmin?: boolean }) {
   const [open, setOpen] = useState(false)
   return (
     <div className="sm:hidden">
@@ -17,6 +17,7 @@ export function MobileNav({ loggedIn }: { loggedIn: boolean }) {
             <Link href="/events/new" className="py-1.5">發布活動</Link>
             {loggedIn && <Link href="/dashboard" className="py-1.5">我的活動</Link>}
             {loggedIn && <Link href="/favorites" className="py-1.5">我的收藏</Link>}
+            {isAdmin && <Link href="/admin/moderation" className="py-1.5 font-medium text-accent">管理後台</Link>}
           </nav>
         </div>
       )}

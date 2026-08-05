@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { ModerationGrid } from '@/components/ModerationGrid'
+import { AdminNav } from '@/components/AdminNav'
 
 export default async function ModerationPage() {
   const supabase = await createClient()
@@ -29,6 +30,7 @@ export default async function ModerationPage() {
 
   return (
     <main className="mx-auto max-w-5xl px-5 py-8">
+      <AdminNav />
       <h1 className="mb-6 text-2xl font-bold tracking-tight-a">待審核活動（{rows.length}）</h1>
       <ModerationGrid
         rows={rows.map(e => ({
