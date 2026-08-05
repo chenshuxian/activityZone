@@ -4,6 +4,7 @@ import { ChevronUp, ChevronDown, Trash2, Image as ImageIcon } from 'lucide-react
 import { createClient } from '@/lib/supabase/server'
 import { listManualBanners, addBanner, removeBanner, reorderBanner } from '@/lib/banners'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { AdminNav } from '@/components/AdminNav'
 
 export default async function AdminBannersPage() {
   const supabase = await createClient()
@@ -34,6 +35,7 @@ export default async function AdminBannersPage() {
 
   return (
     <main className="mx-auto max-w-3xl px-5 py-8">
+      <AdminNav />
       <h1 className="mb-6 text-2xl font-bold tracking-tight-a">Banner 管理</h1>
 
       <form action={add} className="mb-6 flex gap-2">
