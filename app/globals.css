@@ -1,7 +1,10 @@
 @import "tailwindcss";
 
-/* ── Design system tokens · Apple-inspired · light default ───────────── */
+/* ── Design system tokens · Apple-inspired · 固定白底（淺色）───────────── */
+/* 註：目前固定淺色，不跟隨系統深色模式。若日後要恢復亮/暗自動切換，
+   把下方 dark 區塊改回 @media (prefers-color-scheme: dark) 即可。 */
 :root {
+  color-scheme: light;      /* 原生控件（日期/下拉/捲軸）強制淺色 */
   --background: #ffffff;   /* page base */
   --surface:    #f5f5f7;   /* alternating section / chip base */
   --card:       #ffffff;   /* card surface */
@@ -14,23 +17,6 @@
   --chip:       #f5f5f7;
   --glass:      rgba(255, 255, 255, 0.72); /* frosted nav */
   --free:       #0071e3;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #000000;
-    --surface:    #1d1d1f;
-    --card:       #1d1d1f;
-    --foreground: #f5f5f7;
-    --secondary:  #a1a1a6;
-    --accent:     #2997ff;
-    --accent-hover:#0a84ff;
-    --on-accent:  #ffffff;
-    --hairline:   rgba(255, 255, 255, 0.12);
-    --chip:       #2c2c2e;
-    --glass:      rgba(22, 22, 24, 0.72);
-    --free:       #2997ff;
-  }
 }
 
 /* Expose tokens to Tailwind utilities (bg-*, text-*, border-*, rounded-*, shadow-*) */
