@@ -30,23 +30,7 @@ export default async function HomePage({
 
   return (
     <main>
-      {!filtering && (
-        <section className="bg-background px-5 py-16 text-center">
-          <h1 className="mx-auto max-w-3xl text-4xl font-black leading-[1.1] tracking-hero sm:text-5xl">
-            發現你附近的<br />
-            <span className="text-accent">每一場精彩</span>
-          </h1>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-secondary">
-            在地活動，一次看盡。依地區與興趣，為你推薦。
-          </p>
-          <div className="mt-7 flex justify-center gap-2">
-            <ButtonLink href="#browse">開始探索</ButtonLink>
-            <ButtonLink href="/events/new" variant="ghost">發布活動</ButtonLink>
-          </div>
-        </section>
-      )}
-
-      {!filtering && <BannerCarousel banners={banners} />}
+      {!filtering && <BannerCarousel banners={banners} withIntro />}
 
       <div id="browse" className="border-y border-hairline bg-surface/60">
         <Suspense fallback={null}>
