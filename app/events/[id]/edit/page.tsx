@@ -44,6 +44,7 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
     registrationOpen: ev.registration_open ?? true,
     registrationFields,
     coverImage: ev.cover_image ?? '',
+    coverPosition: ev.cover_position ?? 50,
   }
   return (
     <main>

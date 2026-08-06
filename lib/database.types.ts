@@ -127,6 +127,7 @@ export type Database = {
           city: string
           contact_info: string | null
           cover_image: string | null
+          cover_position: number
           created_at: string
           description: string | null
           district: string
@@ -153,6 +154,7 @@ export type Database = {
           city: string
           contact_info?: string | null
           cover_image?: string | null
+          cover_position?: number
           created_at?: string
           description?: string | null
           district: string
@@ -179,6 +181,7 @@ export type Database = {
           city?: string
           contact_info?: string | null
           cover_image?: string | null
+          cover_position?: number
           created_at?: string
           description?: string | null
           district?: string

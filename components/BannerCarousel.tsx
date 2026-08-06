@@ -36,7 +36,8 @@ export function BannerCarousel({
     <section className="relative h-[70vh] min-h-[400px] w-full overflow-hidden bg-black">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={image} alt={isIntro ? hero.title : b.title}
-        className="absolute inset-0 h-full w-full object-cover" />
+        className="absolute inset-0 h-full w-full object-cover"
+        style={isIntro ? undefined : { objectPosition: `center ${b.coverPosition ?? 50}%` }} />
       <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
 
