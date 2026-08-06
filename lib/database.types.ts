@@ -138,6 +138,7 @@ export type Database = {
           organizer_name: string | null
           registration_deadline: string | null
           registration_fields: Json
+          registration_open: boolean
           reject_reason: string | null
           source: string
           source_url: string | null
@@ -163,6 +164,7 @@ export type Database = {
           organizer_name?: string | null
           registration_deadline?: string | null
           registration_fields?: Json
+          registration_open?: boolean
           reject_reason?: string | null
           source?: string
           source_url?: string | null
@@ -188,6 +190,7 @@ export type Database = {
           organizer_name?: string | null
           registration_deadline?: string | null
           registration_fields?: Json
+          registration_open?: boolean
           reject_reason?: string | null
           source?: string
           source_url?: string | null

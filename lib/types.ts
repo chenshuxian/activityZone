@@ -29,6 +29,7 @@ export interface EventDetail extends EventSummary {
   address: string | null
   endAt: string
   registrationDeadline: string | null
+  registrationOpen: boolean
   status: EventStatus
   myRegistration: MyRegistration | null
 }

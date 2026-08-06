@@ -40,6 +40,7 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
     organizerName: ev.organizer_name ?? '',
     contactInfo: ev.contact_info ?? '',
     categoryIds: (ev.event_categories ?? []).map((c: { category_id: string }) => c.category_id),
+    registrationOpen: ev.registration_open ?? true,
     registrationFields,
     coverImage: ev.cover_image ?? '',
   }

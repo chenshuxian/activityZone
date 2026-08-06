@@ -14,6 +14,7 @@ export interface EventInput {
   contactInfo?: string
   capacity?: number | null
   categoryIds: string[]
+  registrationOpen?: boolean
   registrationFields?: { party_size?: string; phone?: string; note?: string }
   coverImage?: string | null
 }
