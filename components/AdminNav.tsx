@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 const tabs = [
   { href: '/admin/moderation', label: '審核活動' },
   { href: '/admin/banners', label: 'Banner 管理' },
+  { href: '/admin/hero', label: '首頁設定' },
 ]
 
 export function AdminNav() {

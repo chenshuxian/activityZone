@@ -355,6 +355,30 @@ export type Database = {
           },
         ]
       }
+      site_settings: {
+        Row: {
+          hero_image: string | null
+          hero_subtitle: string
+          hero_title: string
+          id: number
+          updated_at: string
+        }
+        Insert: {
+          hero_image?: string | null
+          hero_subtitle?: string
+          hero_title?: string
+          id?: number
+          updated_at?: string
+        }
+        Update: {
+          hero_image?: string | null
+          hero_subtitle?: string
+          hero_title?: string
+          id?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       event_registered_counts: {
