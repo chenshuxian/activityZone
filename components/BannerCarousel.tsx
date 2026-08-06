@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import type { BannerItem, HeroSettings } from '@/lib/types'
+import { formatDate } from '@/lib/time'
 
 const INTRO_DEFAULTS: HeroSettings = {
   title: '發現你附近的每一場精彩',
@@ -29,7 +30,7 @@ export function BannerCarousel({
   const hero = intro ?? INTRO_DEFAULTS
   const b = withIntro ? banners[safeIdx - 1] : banners[safeIdx]
   const image = isIntro ? (hero.image || '/default-banner.svg') : (b.coverImage || '/default-banner.svg')
-  const date = b ? new Date(b.startAt).toLocaleDateString('zh-TW', { month: 'numeric', day: 'numeric', weekday: 'short' }) : ''
+  const date = b ? formatDate(b.startAt, { month: 'numeric', day: 'numeric', weekday: 'short' }) : ''
 
   return (
     <section className="relative h-[70vh] min-h-[400px] w-full overflow-hidden bg-black">

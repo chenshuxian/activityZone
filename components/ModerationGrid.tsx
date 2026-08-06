@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { ChevronUp, ChevronDown, CheckCircle2 } from 'lucide-react'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { formatDateTime } from '@/lib/time'
 
 export interface ModerationRow {
   id: string
@@ -74,7 +75,7 @@ export function ModerationGrid({
               <td className="px-3 py-2.5 font-medium">{e.title}</td>
               <td className="px-3 py-2.5 text-secondary">{e.city}{e.district}</td>
               <td className="px-3 py-2.5 text-secondary whitespace-nowrap">
-                {new Date(e.startAt).toLocaleString('zh-TW', { dateStyle: 'short', timeStyle: 'short' })}
+                {formatDateTime(e.startAt)}
               </td>
               <td className="px-3 py-2.5 text-secondary">{e.organizerName}</td>
               <td className="px-3 py-2.5">

@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { CoverImageUpload } from '@/components/CoverImageUpload'
+import { taipeiLocalToISO } from '@/lib/time'
 
 export interface EventFormInitial {
   id: string
@@ -67,7 +68,7 @@ export function EventForm({ categories, initial, submitAction, submitLabel, isAd
     setSubmitting(true)
     const fieldSetting = (k: string) => String(formData.get(`rf_${k}`) ?? 'off')
     const combine = (d: FormDataEntryValue | null, t: FormDataEntryValue | null) =>
-      d && t ? `${String(d)}T${String(t)}` : ''
+      d && t ? taipeiLocalToISO(`${String(d)}T${String(t)}`) : ''
     const input: EventInput = {
       title: String(formData.get('title') ?? ''),
       description: String(formData.get('description') ?? ''),
