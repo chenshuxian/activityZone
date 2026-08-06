@@ -28,14 +28,12 @@ export default async function EventDetailPage({
     new Date(d).toLocaleString('zh-TW', { dateStyle: 'medium', timeStyle: 'short' })
   return (
     <main>
-      {ev.coverImage ? (
-        <div className="w-full bg-surface">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={ev.coverImage} alt={ev.title} className="mx-auto block w-full max-w-6xl" />
-        </div>
-      ) : (
-        <div className="h-56 w-full bg-gradient-to-br from-[#a8c0ff] to-[#3f6cd8]" />
-      )}
+      <div className="flex h-[70vh] min-h-[400px] w-full items-center justify-center overflow-hidden bg-gradient-to-br from-[#a8c0ff] to-[#3f6cd8]">
+        {ev.coverImage && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={ev.coverImage} alt={ev.title} className="h-full w-full object-contain" />
+        )}
+      </div>
       <article className="mx-auto max-w-2xl px-5 py-8">
         <div className="mb-3 flex flex-wrap gap-1.5">
           {ev.categories.map(c => <Chip key={c.id}>{c.name}</Chip>)}
