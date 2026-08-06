@@ -85,3 +85,9 @@ export interface BannerItem {
   startAt: string
   coverImage?: string | null
 }
+
+export interface HeroSettings {
+  title: string
+  subtitle: string
+  image: string | null
+}

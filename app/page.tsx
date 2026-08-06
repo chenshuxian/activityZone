@@ -9,6 +9,7 @@ import { EmptyState } from '@/components/ui/EmptyState'
 import { listPublishedEvents } from '@/lib/events/queries'
 import { getMyFavoriteEventIds } from '@/lib/favorites'
 import { getHomeBanners } from '@/lib/banners'
+import { getHeroSettings } from '@/lib/settings'
 import { createClient } from '@/lib/supabase/server'
 
 export default async function HomePage({
@@ -27,10 +28,11 @@ export default async function HomePage({
   const freeEvents = events.filter(e => e.isFree)
   const favIds = new Set(await getMyFavoriteEventIds())
   const banners = filtering ? [] : await getHomeBanners()
+  const hero = filtering ? null : await getHeroSettings()
 
   return (
     <main>
-      {!filtering && <BannerCarousel banners={banners} withIntro />}
+      {!filtering && <BannerCarousel banners={banners} withIntro intro={hero ?? undefined} />}
 
       <div id="browse" className="border-y border-hairline bg-surface/60">
         <Suspense fallback={null}>

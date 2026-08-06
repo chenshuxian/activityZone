@@ -1,11 +1,17 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import type { BannerItem } from '@/lib/types'
+import type { BannerItem, HeroSettings } from '@/lib/types'
+
+const INTRO_DEFAULTS: HeroSettings = {
+  title: '發現你附近的每一場精彩',
+  subtitle: '在地活動，一次看盡。依地區與興趣，為你推薦。',
+  image: null,
+}
 
 export function BannerCarousel({
-  banners, withIntro = false,
-}: { banners: BannerItem[]; withIntro?: boolean }) {
+  banners, withIntro = false, intro,
+}: { banners: BannerItem[]; withIntro?: boolean; intro?: HeroSettings }) {
   const total = (withIntro ? 1 : 0) + banners.length
   const [idx, setIdx] = useState(0)
   useEffect(() => {
@@ -20,14 +26,15 @@ export function BannerCarousel({
   if (total === 0) return null
   const safeIdx = Math.min(idx, total - 1)
   const isIntro = withIntro && safeIdx === 0
+  const hero = intro ?? INTRO_DEFAULTS
   const b = withIntro ? banners[safeIdx - 1] : banners[safeIdx]
-  const image = isIntro ? '/default-banner.svg' : (b.coverImage || '/default-banner.svg')
+  const image = isIntro ? (hero.image || '/default-banner.svg') : (b.coverImage || '/default-banner.svg')
   const date = b ? new Date(b.startAt).toLocaleDateString('zh-TW', { month: 'numeric', day: 'numeric', weekday: 'short' }) : ''
 
   return (
     <section className="relative h-[70vh] min-h-[400px] w-full overflow-hidden bg-black">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={image} alt={isIntro ? '活動網' : b.title}
+      <img src={image} alt={isIntro ? hero.title : b.title}
         className="absolute inset-0 h-full w-full object-cover" />
       <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
@@ -36,10 +43,10 @@ export function BannerCarousel({
         {isIntro ? (
           <div className="max-w-2xl">
             <h2 className="text-4xl font-black leading-[1.05] tracking-hero text-white drop-shadow-lg sm:text-6xl">
-              發現你附近的<br />每一場精彩
+              {hero.title}
             </h2>
-            <p className="mt-4 max-w-xl text-base text-white/90 sm:text-lg">
-              在地活動，一次看盡。依地區與興趣，為你推薦。
+            <p className="mt-4 max-w-xl whitespace-pre-line text-base text-white/90 sm:text-lg">
+              {hero.subtitle}
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link href="#browse"
