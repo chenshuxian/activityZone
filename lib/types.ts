@@ -85,6 +85,7 @@ export interface BannerItem {
   district: string
   startAt: string
   coverImage?: string | null
+  coverPosition?: number
 }
 
 export interface HeroSettings {

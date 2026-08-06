@@ -36,6 +36,7 @@ export async function createEvent(input: EventInput) {
     registration_open: input.registrationOpen ?? true,
     registration_fields: input.registrationFields ?? {},
     cover_image: input.coverImage ?? null,
+    cover_position: input.coverPosition ?? 50,
   }
 
   const { data, error } = await supabase.from('events').insert(insert).select('id').single()
@@ -69,6 +70,7 @@ export async function updateEvent(eventId: string, input: EventInput) {
     registration_open: input.registrationOpen ?? true,
     registration_fields: input.registrationFields ?? {},
     cover_image: input.coverImage ?? null,
+    cover_position: input.coverPosition ?? 50,
   }
 
   const { error } = await supabase.from('events').update(update).eq('id', eventId)

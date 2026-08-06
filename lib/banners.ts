@@ -3,14 +3,14 @@ import { createClient } from '@/lib/supabase/server'
 import { mergeBanners } from '@/lib/banners-logic'
 import type { BannerItem } from '@/lib/types'
 
-type EventRow = { id: string; title: string; city: string; district: string; start_at: string; status?: string; end_at?: string; cover_image?: string | null }
-const toItem = (e: EventRow): BannerItem => ({ eventId: e.id, title: e.title, city: e.city, district: e.district, startAt: e.start_at, coverImage: e.cover_image ?? null })
+type EventRow = { id: string; title: string; city: string; district: string; start_at: string; status?: string; end_at?: string; cover_image?: string | null; cover_position?: number }
+const toItem = (e: EventRow): BannerItem => ({ eventId: e.id, title: e.title, city: e.city, district: e.district, startAt: e.start_at, coverImage: e.cover_image ?? null, coverPosition: e.cover_position ?? 50 })
 
 export async function getHomeBanners(limit = 5): Promise<BannerItem[]> {
   const supabase = await createClient()
   const nowIso = new Date().toISOString()
   const { data: manualRows } = await supabase.from('banners')
-    .select('sort_order, events!inner(id, title, city, district, start_at, status, end_at, cover_image)')
+    .select('sort_order, events!inner(id, title, city, district, start_at, status, end_at, cover_image, cover_position)')
     .eq('active', true)
     .order('sort_order', { ascending: true })
   const manual = ((manualRows ?? []) as unknown as { events: EventRow }[])
@@ -21,7 +21,7 @@ export async function getHomeBanners(limit = 5): Promise<BannerItem[]> {
   let auto: BannerItem[] = []
   if (manual.length < limit) {
     const { data: autoRows } = await supabase.from('events')
-      .select('id, title, city, district, start_at, cover_image')
+      .select('id, title, city, district, start_at, cover_image, cover_position')
       .eq('status', 'published')
       .gte('start_at', nowIso)
       .order('start_at', { ascending: true })

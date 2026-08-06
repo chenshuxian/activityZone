@@ -17,6 +17,7 @@ export interface EventInput {
   registrationOpen?: boolean
   registrationFields?: { party_size?: string; phone?: string; note?: string }
   coverImage?: string | null
+  coverPosition?: number
 }
 
 export function validateEventInput(input: EventInput): string[] {

@@ -26,6 +26,7 @@ export interface EventFormInitial {
   registrationOpen?: boolean
   registrationFields?: { party_size?: string; phone?: string; note?: string }
   coverImage?: string
+  coverPosition?: number
 }
 
 export interface EventFormProps {
@@ -58,6 +59,7 @@ export function EventForm({ categories, initial, submitAction, submitLabel, isAd
   const [city, setCity] = useState(initial?.city ?? '')
   const [regOpen, setRegOpen] = useState(initial?.registrationOpen ?? true)
   const [coverUrl, setCoverUrl] = useState<string | null>(initial?.coverImage ?? null)
+  const [coverPos, setCoverPos] = useState(initial?.coverPosition ?? 50)
   const [errors, setErrors] = useState<string[]>([])
   const [submitting, setSubmitting] = useState(false)
   const today = new Date().toISOString().slice(0, 10)
@@ -82,6 +84,7 @@ export function EventForm({ categories, initial, submitAction, submitLabel, isAd
       contactInfo: String(formData.get('contactInfo') ?? ''),
       capacity: formData.get('capacity') ? Number(formData.get('capacity')) : null,
       categoryIds: formData.getAll('categoryIds').map(String),
+      coverPosition: coverPos,
       registrationOpen: regOpen,
       registrationFields: {
         party_size: fieldSetting('party_size'),
@@ -113,6 +116,29 @@ export function EventForm({ categories, initial, submitAction, submitLabel, isAd
       <div>
         <label className={labelClass}>封面圖（選填）</label>
         <CoverImageUpload initialUrl={initial?.coverImage} onChange={setCoverUrl} />
+        {coverUrl && (
+          <div className="mt-3">
+            <div className="mb-1 flex items-center justify-between">
+              <span className="text-sm font-medium">首頁 Banner 顯示範圍</span>
+              <span className="text-xs text-secondary">拖曳調整上下焦點，避免被切頭切尾</span>
+            </div>
+            <div className="relative h-28 w-full overflow-hidden rounded-lg border border-hairline bg-black sm:h-32">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={coverUrl} alt="banner 預覽"
+                className="absolute inset-0 h-full w-full object-cover"
+                style={{ objectPosition: `center ${coverPos}%` }} />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent" />
+              <span className="absolute bottom-2 left-3 text-xs font-medium text-white/90">Banner 預覽</span>
+            </div>
+            <div className="mt-2 flex items-center gap-3">
+              <span className="text-xs text-secondary">上</span>
+              <input type="range" min={0} max={100} step={5} value={coverPos}
+                onChange={e => setCoverPos(Number(e.target.value))}
+                className="h-1.5 flex-1 cursor-pointer accent-accent" aria-label="Banner 垂直焦點" />
+              <span className="text-xs text-secondary">下</span>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-2 gap-3">
