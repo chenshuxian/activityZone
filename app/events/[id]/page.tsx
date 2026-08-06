@@ -28,13 +28,14 @@ export default async function EventDetailPage({
     new Date(d).toLocaleString('zh-TW', { dateStyle: 'medium', timeStyle: 'short' })
   return (
     <main>
-      <div className="relative h-[70vh] min-h-[400px] w-full overflow-hidden bg-gradient-to-br from-[#a8c0ff] to-[#3f6cd8]">
-        {ev.coverImage && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={ev.coverImage} alt={ev.title} className="absolute inset-0 h-full w-full object-cover" />
-        )}
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
-      </div>
+      {ev.coverImage ? (
+        <div className="w-full bg-surface">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={ev.coverImage} alt={ev.title} className="mx-auto block w-full max-w-6xl" />
+        </div>
+      ) : (
+        <div className="h-56 w-full bg-gradient-to-br from-[#a8c0ff] to-[#3f6cd8]" />
+      )}
       <article className="mx-auto max-w-2xl px-5 py-8">
         <div className="mb-3 flex flex-wrap gap-1.5">
           {ev.categories.map(c => <Chip key={c.id}>{c.name}</Chip>)}
