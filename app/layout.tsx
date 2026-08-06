@@ -11,7 +11,7 @@ const notoSansTC = Noto_Sans_TC({
 });
 
 export const metadata: Metadata = {
-  title: "活動網 · 發現你附近的每一場精彩",
+  title: "島語 · 發現你附近的每一場精彩",
   description: "在地活動，一次看盡。依地區與興趣，為你推薦。",
 };
 

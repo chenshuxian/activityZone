@@ -28,7 +28,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 border-b border-hairline bg-glass backdrop-blur-xl backdrop-saturate-150">
       <div className="mx-auto flex h-12 max-w-6xl items-center gap-6 px-5 text-sm">
-        <Link href="/" className="text-[15px] font-bold tracking-tight-a">活動網</Link>
+        <Link href="/" className="text-[15px] font-bold tracking-tight-a">島語</Link>
         <MobileNav loggedIn={Boolean(email)} isAdmin={isAdmin} />
         <nav className="hidden items-center gap-5 text-secondary sm:flex">
           <Link href="/" className="transition-colors hover:text-foreground">探索</Link>
