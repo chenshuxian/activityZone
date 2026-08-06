@@ -32,7 +32,7 @@ export function Row({
           </Link>
         )}
       </div>
-      <div className="no-scrollbar mt-4 flex gap-4 overflow-x-auto px-5 pb-2">
+      <div className="no-scrollbar mx-auto mt-4 flex max-w-6xl gap-4 overflow-x-auto px-5 pb-2">
         {children}
       </div>
     </section>
