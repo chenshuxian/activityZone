@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getEventRegistrations } from '@/lib/events/registrations-admin'
 import { EmptyState } from '@/components/ui/EmptyState'
 import type { RegistrationRow } from '@/lib/types'
+import { formatDateTime } from '@/lib/time'
 
 export default async function RegistrationsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -40,7 +41,7 @@ export default async function RegistrationsPage({ params }: { params: Promise<{ 
                   <td className="py-2 pr-4">{r.email}</td>
                   <td className="py-2 pr-4">{r.partySize}</td>
                   <td className="py-2 pr-4">{Object.entries(r.formAnswers).map(([k,v]) => `${k}=${v}`).join('; ')}</td>
-                  <td className="py-2">{new Date(r.createdAt).toLocaleString('zh-TW')}</td>
+                  <td className="py-2">{formatDateTime(r.createdAt)}</td>
                 </tr>
               ))}
             </tbody>

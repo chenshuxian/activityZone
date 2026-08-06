@@ -4,6 +4,7 @@ import { getEventForEdit } from '@/lib/events/dashboard'
 import { updateEvent } from '@/lib/events/actions'
 import { EventForm } from '@/components/EventForm'
 import type { EventInput } from '@/lib/events/mutations'
+import { taipeiInputValue } from '@/lib/time'
 
 export default async function EditEventPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -33,8 +34,8 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
     city: ev.city,
     district: ev.district,
     address: ev.address ?? '',
-    startAt: toLocalInput(ev.start_at),
-    endAt: toLocalInput(ev.end_at),
+    startAt: taipeiInputValue(ev.start_at),
+    endAt: taipeiInputValue(ev.end_at),
     capacity: ev.capacity,
     isFree: ev.is_free,
     organizerName: ev.organizer_name ?? '',
@@ -49,10 +50,4 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
       <EventForm categories={categories ?? []} initial={initial} submitAction={submit} submitLabel="儲存變更" />
     </main>
   )
-}
-
-function toLocalInput(iso: string): string {
-  const d = new Date(iso)
-  const pad = (n: number) => String(n).padStart(2, '0')
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
 }

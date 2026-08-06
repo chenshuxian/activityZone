@@ -6,6 +6,7 @@ import { getMyEvents } from '@/lib/events/dashboard'
 import { StatusBadge } from '@/components/StatusBadge'
 import { ButtonLink } from '@/components/ui/Button'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { formatDate } from '@/lib/time'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -34,7 +35,7 @@ export default async function DashboardPage() {
                 <StatusBadge status={e.status} />
               </div>
               <div className="mt-1 text-sm text-secondary">
-                {new Date(e.startAt).toLocaleDateString('zh-TW')} ·
+                {formatDate(e.startAt)} ·
                 {' '}正取 {e.registeredCount}{e.capacity !== null ? ` / ${e.capacity}` : ''}
                 {e.waitlistCount > 0 ? ` · 候補 ${e.waitlistCount}` : ''}
               </div>

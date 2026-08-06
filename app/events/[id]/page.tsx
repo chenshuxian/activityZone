@@ -5,6 +5,7 @@ import { RegistrationPanel } from '@/components/RegistrationPanel'
 import { FavoriteButton } from '@/components/FavoriteButton'
 import { parseRegistrationFields, type RegistrationFieldConfig } from '@/lib/events/registration-logic'
 import { createClient } from '@/lib/supabase/server'
+import { formatDateTime } from '@/lib/time'
 
 export default async function EventDetailPage({
   params,
@@ -24,8 +25,7 @@ export default async function EventDetailPage({
   const maps = ev.address
     ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ev.address)}`
     : null
-  const fmt = (d: string) =>
-    new Date(d).toLocaleString('zh-TW', { dateStyle: 'medium', timeStyle: 'short' })
+  const fmt = formatDateTime
   return (
     <main>
       <div className="flex h-[70vh] min-h-[400px] w-full items-center justify-center overflow-hidden bg-gradient-to-br from-[#a8c0ff] to-[#3f6cd8]">

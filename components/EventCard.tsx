@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { EventSummary } from "@/lib/types";
 import { Chip } from "@/components/ui/Chip";
 import { FavoriteButton } from "@/components/FavoriteButton";
+import { formatDate } from "@/lib/time";
 
 export function EventCard({
   event,
@@ -10,7 +11,7 @@ export function EventCard({
   event: EventSummary;
   isFavorited?: boolean;
 }) {
-  const date = new Date(event.startAt).toLocaleDateString("zh-TW", {
+  const date = formatDate(event.startAt, {
     month: "numeric",
     day: "numeric",
     weekday: "short",
