@@ -46,7 +46,7 @@ export default async function AdminBannersPage() {
       </form>
 
       {banners.length === 0 && (
-        <EmptyState icon={ImageIcon} title="目前沒有手動 banner" description="首頁會自動補近期活動" />
+        <EmptyState icon={ImageIcon} title="目前沒有手動 banner" description="首頁會自動補島上近語" />
       )}
       <ul className="flex flex-col gap-2">
         {banners.map(b => (

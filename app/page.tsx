@@ -60,7 +60,7 @@ export default async function HomePage({
         />
       ) : (
         <>
-          <Row title="近期活動" subtitle="越近期，越前面。">
+          <Row title="島上近語" subtitle="越近期，越前面。">
             {events.map(e => (
               <div key={e.id} className="w-[240px] shrink-0">
                 <EventCard event={e} isFavorited={favIds.has(e.id)} />
