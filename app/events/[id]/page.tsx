@@ -28,11 +28,12 @@ export default async function EventDetailPage({
     new Date(d).toLocaleString('zh-TW', { dateStyle: 'medium', timeStyle: 'short' })
   return (
     <main>
-      <div className="relative h-56 w-full bg-gradient-to-br from-[#a8c0ff] to-[#3f6cd8]">
+      <div className="relative h-[70vh] min-h-[400px] w-full overflow-hidden bg-gradient-to-br from-[#a8c0ff] to-[#3f6cd8]">
         {ev.coverImage && (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={ev.coverImage} alt={ev.title} className="absolute inset-0 h-full w-full object-cover" />
         )}
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
       </div>
       <article className="mx-auto max-w-2xl px-5 py-8">
         <div className="mb-3 flex flex-wrap gap-1.5">
@@ -65,16 +66,18 @@ export default async function EventDetailPage({
 
         <div className="my-6 space-y-3">
           <FavoriteButton eventId={ev.id} initialFavorited={Boolean(fav)} variant="inline" />
-          <RegistrationPanel
-            eventId={ev.id}
-            capacity={ev.capacity}
-            registeredCount={ev.registeredCount}
-            fields={fields}
-            startAt={ev.startAt}
-            registrationDeadline={ev.registrationDeadline}
-            isLoggedIn={Boolean(user)}
-            myRegistration={ev.myRegistration}
-          />
+          {ev.registrationOpen && (
+            <RegistrationPanel
+              eventId={ev.id}
+              capacity={ev.capacity}
+              registeredCount={ev.registeredCount}
+              fields={fields}
+              startAt={ev.startAt}
+              registrationDeadline={ev.registrationDeadline}
+              isLoggedIn={Boolean(user)}
+              myRegistration={ev.myRegistration}
+            />
+          )}
         </div>
 
         {ev.description && (

@@ -14,6 +14,10 @@ export async function createEvent(input: EventInput) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { ok: false as const, errors: ['請先登入'] }
 
+  // 管理員發布的活動免審核，直接上架
+  const { data: me } = await supabase.from('profiles').select('role').eq('id', user.id).single()
+  const isAdmin = me?.role === 'admin'
+
   const insert: EventInsert = {
     organizer_id: user.id,
     title: input.title,
@@ -28,7 +32,8 @@ export async function createEvent(input: EventInput) {
     organizer_name: input.organizerName ?? null,
     contact_info: input.contactInfo ?? null,
     capacity: input.capacity ?? null,
-    status: 'pending',
+    status: isAdmin ? 'published' : 'pending',
+    registration_open: input.registrationOpen ?? true,
     registration_fields: input.registrationFields ?? {},
     cover_image: input.coverImage ?? null,
   }
@@ -61,6 +66,7 @@ export async function updateEvent(eventId: string, input: EventInput) {
     organizer_name: input.organizerName ?? null,
     contact_info: input.contactInfo ?? null,
     capacity: input.capacity ?? null,
+    registration_open: input.registrationOpen ?? true,
     registration_fields: input.registrationFields ?? {},
     cover_image: input.coverImage ?? null,
   }

@@ -65,7 +65,7 @@ export async function getEventById(id: string): Promise<EventDetail | null> {
   const supabase = await createClient()
   const { data, error } = await supabase.from('events')
     .select(`${SELECT}, description, organizer_name, contact_info, fee_note,
-             address, end_at, registration_deadline, status`)
+             address, end_at, registration_deadline, registration_open, status`)
     .eq('id', id).maybeSingle()
   if (error) throw error
   if (!data) return null
@@ -89,6 +89,7 @@ export async function getEventById(id: string): Promise<EventDetail | null> {
     address: data.address ?? null,
     endAt: data.end_at,
     registrationDeadline: data.registration_deadline ?? null,
+    registrationOpen: data.registration_open ?? true,
     // `status` is a `text` column with a CHECK constraint in Postgres, not a
     // native enum, so the generated type is the widened `string` here. The
     // CHECK constraint guarantees the runtime value is one of EventStatus.

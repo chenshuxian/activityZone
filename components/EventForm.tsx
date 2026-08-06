@@ -22,6 +22,7 @@ export interface EventFormInitial {
   organizerName?: string
   contactInfo?: string
   categoryIds?: string[]
+  registrationOpen?: boolean
   registrationFields?: { party_size?: string; phone?: string; note?: string }
   coverImage?: string
 }
@@ -31,6 +32,7 @@ export interface EventFormProps {
   initial?: EventFormInitial
   submitAction?: (input: EventInput) => Promise<{ ok: boolean; errors?: string[] }>
   submitLabel?: string
+  isAdmin?: boolean
 }
 
 // 30 分鐘間隔的時間選項
@@ -50,9 +52,10 @@ const inputClass =
   'w-full rounded-lg border border-hairline bg-card px-3 py-2 text-sm text-foreground outline-none placeholder:text-secondary focus:border-accent'
 const labelClass = 'mb-1 block text-sm font-medium'
 
-export function EventForm({ categories, initial, submitAction, submitLabel }: EventFormProps) {
+export function EventForm({ categories, initial, submitAction, submitLabel, isAdmin }: EventFormProps) {
   const router = useRouter()
   const [city, setCity] = useState(initial?.city ?? '')
+  const [regOpen, setRegOpen] = useState(initial?.registrationOpen ?? true)
   const [coverUrl, setCoverUrl] = useState<string | null>(initial?.coverImage ?? null)
   const [errors, setErrors] = useState<string[]>([])
   const [submitting, setSubmitting] = useState(false)
@@ -78,6 +81,7 @@ export function EventForm({ categories, initial, submitAction, submitLabel }: Ev
       contactInfo: String(formData.get('contactInfo') ?? ''),
       capacity: formData.get('capacity') ? Number(formData.get('capacity')) : null,
       categoryIds: formData.getAll('categoryIds').map(String),
+      registrationOpen: regOpen,
       registrationFields: {
         party_size: fieldSetting('party_size'),
         phone: fieldSetting('phone'),
@@ -192,23 +196,38 @@ export function EventForm({ categories, initial, submitAction, submitLabel }: Ev
         </div>
       </div>
 
-      <fieldset className="rounded-card border border-hairline p-4">
-        <legend className="px-1 text-sm font-medium text-secondary">報名要收集的欄位</legend>
-        {([['party_size', '同行人數'], ['phone', '聯絡電話'], ['note', '備註']] as const).map(([k, label]) => (
-          <label key={k} className="flex items-center justify-between py-1.5 text-sm">
-            {label}
-            <select name={`rf_${k}`} defaultValue={initial?.registrationFields?.[k] ?? 'off'} className="rounded-lg border border-hairline bg-card px-2 py-1">
-              <option value="off">不收集</option>
-              <option value="optional">選填</option>
-              <option value="required">必填</option>
-            </select>
-          </label>
-        ))}
-      </fieldset>
+      <div className="rounded-card border border-hairline p-4">
+        <label className="flex items-center justify-between text-sm font-medium">
+          開放線上報名
+          <input type="checkbox" checked={regOpen} onChange={e => setRegOpen(e.target.checked)} className="h-4 w-4" />
+        </label>
+        <p className="mt-1 text-xs text-secondary">
+          {regOpen ? '參加者可在活動頁直接報名。' : '關閉後活動頁只顯示資訊，不出現報名鈕（純佈告欄）。'}
+        </p>
+      </div>
+
+      {regOpen && (
+        <fieldset className="rounded-card border border-hairline p-4">
+          <legend className="px-1 text-sm font-medium text-secondary">報名要收集的欄位</legend>
+          {([['party_size', '同行人數'], ['phone', '聯絡電話'], ['note', '備註']] as const).map(([k, label]) => (
+            <label key={k} className="flex items-center justify-between py-1.5 text-sm">
+              {label}
+              <select name={`rf_${k}`} defaultValue={initial?.registrationFields?.[k] ?? 'off'} className="rounded-lg border border-hairline bg-card px-2 py-1">
+                <option value="off">不收集</option>
+                <option value="optional">選填</option>
+                <option value="required">必填</option>
+              </select>
+            </label>
+          ))}
+        </fieldset>
+      )}
 
       <Button type="submit" disabled={submitting} className="w-full">
-        {submitting ? '送出中…' : (submitLabel ?? '送出審核')}
+        {submitting ? '送出中…' : (submitLabel ?? (isAdmin ? '直接發布' : '送出審核'))}
       </Button>
+      {isAdmin && !initial?.id && (
+        <p className="-mt-2 text-center text-xs text-secondary">管理員發布的活動免審核，送出後立即上架。</p>
+      )}
     </form>
   )
 }
