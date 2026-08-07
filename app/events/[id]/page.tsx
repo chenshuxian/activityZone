@@ -6,6 +6,7 @@ import { FavoriteButton } from '@/components/FavoriteButton'
 import { parseRegistrationFields, type RegistrationFieldConfig } from '@/lib/events/registration-logic'
 import { createClient } from '@/lib/supabase/server'
 import { formatDateTime } from '@/lib/time'
+import { Linkify } from '@/components/Linkify'
 
 export default async function EventDetailPage({
   params,
@@ -81,7 +82,7 @@ export default async function EventDetailPage({
 
         {ev.description && (
           <div className="mt-8 whitespace-pre-wrap leading-relaxed text-foreground">
-            {ev.description}
+            <Linkify text={ev.description} />
           </div>
         )}
       </article>
