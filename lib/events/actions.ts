@@ -84,6 +84,12 @@ export async function updateEvent(eventId: string, input: EventInput) {
   return { ok: true as const }
 }
 
+export async function deleteEvent(id: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.from('events').delete().eq('id', id)
+  return { ok: !error, error: error?.message }
+}
+
 export async function approveEvent(id: string) {
   const supabase = await createClient()
   const { data: cur, error: curError } = await supabase.from('events').select('status').eq('id', id).single()
