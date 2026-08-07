@@ -3,7 +3,7 @@ import { createEvent } from '@/lib/events/actions'
 import type { EventInput } from '@/lib/events/mutations'
 import type { Category } from '@/lib/types'
 import { CITIES, REGIONS } from '@/lib/regions'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { CoverImageUpload } from '@/components/CoverImageUpload'
@@ -62,11 +62,14 @@ export function EventForm({ categories, initial, submitAction, submitLabel, isAd
   const [coverPos, setCoverPos] = useState(initial?.coverPosition ?? 50)
   const [errors, setErrors] = useState<string[]>([])
   const [submitting, setSubmitting] = useState(false)
+  const submittingRef = useRef(false)
   const today = new Date().toISOString().slice(0, 10)
   const start = splitDateTime(initial?.startAt)
   const end = splitDateTime(initial?.endAt)
 
   async function action(formData: FormData) {
+    if (submittingRef.current) return // 同步擋掉快速重複點擊，避免重覆發佈
+    submittingRef.current = true
     setSubmitting(true)
     const fieldSetting = (k: string) => String(formData.get(`rf_${k}`) ?? 'off')
     const combine = (d: FormDataEntryValue | null, t: FormDataEntryValue | null) =>
@@ -94,7 +97,8 @@ export function EventForm({ categories, initial, submitAction, submitLabel, isAd
       coverImage: coverUrl,
     }
     const res = await (submitAction ?? createEvent)(input)
-    if (!res.ok) { setErrors(res.errors ?? []); setSubmitting(false); return }
+    if (!res.ok) { setErrors(res.errors ?? []); setSubmitting(false); submittingRef.current = false; return }
+    // 成功：保持鎖定並導頁，不解鎖，避免重覆送出
     router.push(initial?.id ? '/dashboard' : '/?submitted=1')
   }
 
